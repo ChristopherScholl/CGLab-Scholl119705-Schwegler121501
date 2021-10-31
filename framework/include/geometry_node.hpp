@@ -13,7 +13,7 @@ class GeometryNode : public Node {
  
  private:
   // attributes
-  model geometry_
+  model geometry_;
 };
 
 #endif
