@@ -1,4 +1,4 @@
-#include "..\include\scene_graph.hpp"
+#include "scene_graph.hpp"
 
 // constructors
 SceneGraph::SceneGraph(){}

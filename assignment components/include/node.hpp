@@ -4,8 +4,8 @@
 #include <string>
 #include <memory>
 #include <list>
-#include "..\..\external\glm-0.9.6.3\glm\glm.hpp"
-#include "..\..\framework\include\model.hpp"
+#include "../../external/glm-0.9.6.3/glm/glm.hpp"
+#include "../../framework/include/model.hpp"
 #include "node.hpp"
 
 class Node {
