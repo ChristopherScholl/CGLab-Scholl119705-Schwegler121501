@@ -1,10 +1,17 @@
-#include "scene_graph.hpp"
+#include "..\include\scene_graph.hpp"
 
 // constructors
 SceneGraph::SceneGraph(){}
-SceneGraph::SceneGraph(std::string const& name) : name_(name), root_node_(std::make_shared<Node>(Node())){}
+SceneGraph::SceneGraph(std::string const& name) :
+    name_(name),
+    root_node_(
+        std::make_shared<Node>(
+            Node()
+            )
+        )
+    {}
 
-// get methods
+// get attribute methods
 std::string SceneGraph::getName(){
     return name_;
 }
@@ -12,7 +19,7 @@ std::shared_ptr<Node> SceneGraph::getRoot(){
     return root_node_;
 }
 
-// set methods
+// set attribute methods
 void SceneGraph::setName(std::string const& name){
     name_ = name;
 }

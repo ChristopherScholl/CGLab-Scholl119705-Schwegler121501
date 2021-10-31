@@ -1,4 +1,4 @@
-#include "node.hpp"
+#include "..\include\node.hpp"
 
 // constructors
 Node::Node(){}
@@ -16,17 +16,25 @@ Node::Node(
     path_(path),
     depth_(depth),
     world_transform_(world_transform),
-    local_tansform_(local_transform)
+    local_transform_(local_tansform)
+{}
+Node::Node(
+    glm::mat4 const& world_transform,
+    glm::mat4 const& local_transform
+) : name_("root"),
+    parent_(nullptr),
+    children_(),
+    path_(""),
+    depth_(0),
+    world_transform_(world_transform),
+    local_transform_(local_transform)
 {}
 
-// get methods
+// get attribute methods
 std::string Node::getName(){
     return name_;
 }
 std::shared_ptr<Node> Node::getParent(){
-    return parent_;
-}
-std::shared_ptr<Node> Node::getChild(std::string const& child_name){
     return parent_;
 }
 std::list<std::shared_ptr<Node>> Node::getChildren(){
@@ -42,10 +50,25 @@ glm::mat4 Node::getWorldTransform(){
     return world_transform_;
 }
 glm::mat4 Node::getLocalTransform(){
-    return local_tansform_;
+    return local_transform_;
 }
 
 // set methods
 void Node::setParent(std::shared_ptr<Node> const& parent){
     parent_ = parent;
+}
+void Node::setWorldTransform(glm::mat4 const& world_transform){
+    world_transform_ = world_transform;
+}
+void Node::setLocalTransform(glm::mat4 const& local_transform){
+    local_transform_ = local_transform;
+}
+
+// get one specific child
+std::shared_ptr<Node> Node::getChild(std::string const& child_name){
+    for (std::shared_ptr<Node> node : children_){
+        if(node->getName() == child_name){
+            return node;
+        }
+    }
 }

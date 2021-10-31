@@ -4,7 +4,6 @@
 #include <string>
 #include <memory>
 #include "node.hpp"
-#include <../../framework/include/model.hpp>
 
 // 
 class GeometryNode : public Node {

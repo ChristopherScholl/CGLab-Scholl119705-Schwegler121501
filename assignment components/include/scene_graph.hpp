@@ -11,7 +11,7 @@ class SceneGraph {
   SceneGraph();
   SceneGraph(std::string const& name);
 
-  // get methods
+  // get attribute methods
   std::string getName();
   std::shared_ptr<Node> getRoot();
 
@@ -19,7 +19,7 @@ class SceneGraph {
   std::string printGraph();
  
  private:
-  // set methods
+  // set attribute methods
   void setName(std::string const& name);
   void setRoot(std::shared_ptr<Node> const& root_node);
 
