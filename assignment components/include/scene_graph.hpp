@@ -7,8 +7,6 @@
 class SceneGraph : public Application {
  public:
   // allocate and initialize objects
-  // ApplicationVbo(std::string const& resource_path);
-  // ~ApplicationVbo();
   SceneGraph(std::string const& resource_path);
   ~SceneGraph();
 
