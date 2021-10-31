@@ -1,23 +1,31 @@
-#ifndef APPLICATION_SCENE_GRAPH_HPP
-#define APPLICATION_SCENE_GRAPH_HPP
+#ifndef SCENE_GRAPH_HPP
+#define SCENE_GRAPH_HPP
 
-#include "application.hpp"
+#include <string>
+#include <memory>
+#include "node.hpp"
 
-// gpu representation of model
-class SceneGraph : public Application {
+class SceneGraph {
  public:
-  // allocate and initialize objects
-  SceneGraph(std::string const& resource_path);
-  ~SceneGraph();
+  // constructors
+  SceneGraph();
+  SceneGraph(std::string const& name);
 
-  // draw all objects
-  // void render() const;
+  // get methods
+  std::string getName();
+  std::shared_ptr<Node> getRoot();
 
+  // print method
+  std::string printGraph();
  
  private:
-  // void initializeGeometry();
-  // vertex buffer object
-  // GLuint m_vertex_bo;
+  // set methods
+  void setName(std::string const& name);
+  void setRoot(std::shared_ptr<Node> const& root_node);
+
+  // attributes
+  std::string name_;
+  std::shared_ptr<Node> root_node_;
 };
 
 #endif

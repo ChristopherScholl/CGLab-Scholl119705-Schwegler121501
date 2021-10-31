@@ -1,11 +1,26 @@
 #include "scene_graph.hpp"
-#include "window_handler.hpp"
 
-#include <glbinding/gl/gl.h>
-// use gl definitions from glbinding 
-using namespace gl;
+// constructors
+SceneGraph::SceneGraph(){}
+SceneGraph::SceneGraph(std::string const& name) : name_(name), root_node_(std::make_shared<Node>(Node())){}
 
-//dont load gl bindings from glfw
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+// get methods
+std::string SceneGraph::getName(){
+    return name_;
+}
+std::shared_ptr<Node> SceneGraph::getRoot(){
+    return root_node_;
+}
 
+// set methods
+void SceneGraph::setName(std::string const& name){
+    name_ = name;
+}
+void SceneGraph::setRoot(std::shared_ptr<Node> const& root_node){
+    root_node_ = root_node;
+}
+
+// print method
+std::string SceneGraph::printGraph(){
+    return name_ + " Kekse";
+}
