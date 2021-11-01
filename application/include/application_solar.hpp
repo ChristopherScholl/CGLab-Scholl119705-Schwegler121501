@@ -5,6 +5,8 @@
 #include "model.hpp"
 #include "structs.hpp"
 #include "scene_graph.hpp"
+#include "geometry_node.hpp"
+#include "camera_node.hpp"
 
 // gpu representation of model
 class ApplicationSolar : public Application {
@@ -34,6 +36,10 @@ class ApplicationSolar : public Application {
   // upload view matrix
   void uploadView();
 
+  // create Scene Graph
+  void initializeSolarSystem();
+  //void makePlanet(std::string const& name, std::shared_ptr<Node> const& parent);
+
   // cpu representation of model
   model_object planet_object;
   
@@ -41,6 +47,9 @@ class ApplicationSolar : public Application {
   glm::fmat4 m_view_transform;
   // camera projection matrix
   glm::fmat4 m_view_projection;
+
+  private:
+  SceneGraph solarSystem_;
 };
 
 #endif

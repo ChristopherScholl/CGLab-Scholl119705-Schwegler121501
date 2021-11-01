@@ -14,10 +14,13 @@ class Node {
   Node();
   Node(
       std::string const& name,
+      std::shared_ptr<Node> const& parent
+  );
+  Node(
+      std::string const& name,
       std::shared_ptr<Node> const& parent,
       std::list<std::shared_ptr<Node>> const& children,
       std::string const& path,
-      int depth,
       glm::mat4 const& worldTransform,
       glm::mat4 const& localTansform
   );

@@ -10,7 +10,8 @@ public:
     // constructors
     CameraNode();
     CameraNode(bool isPerspective, bool isEnabled, glm::mat4 const& projectionMatrix);
-
+    CameraNode(std::string const& name, std::shared_ptr<Node> const& parent);
+    
     // get attribute methods
     bool getPerspective() const;
     bool getEnabled() const;

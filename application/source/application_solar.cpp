@@ -26,6 +26,7 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  ,m_view_projection{utils::calculate_projection_matrix(initial_aspect_ratio)}
 {
   initializeGeometry();
+  initializeSolarSystem();
   initializeShaderPrograms();
 }
 
@@ -34,6 +35,33 @@ ApplicationSolar::~ApplicationSolar() {
   glDeleteBuffers(1, &planet_object.element_BO);
   glDeleteVertexArrays(1, &planet_object.vertex_AO);
 }
+
+void ApplicationSolar::initializeSolarSystem(){
+  // root
+  std::shared_ptr<Node> root_node = std::make_shared<Node>(Node());
+  solarSystem_ = SceneGraph("Solar System", root_node);
+
+  // sun
+  std::shared_ptr<Node> sun_holder = std::make_shared<Node>(Node("sun holder", root_node));
+  root_node->addChild(sun_holder);
+  std::shared_ptr<GeometryNode> sun = std::make_shared<GeometryNode>(GeometryNode("sun", sun_holder));
+  sun_holder->addChild(sun);
+
+  // planets
+  
+
+  // camera
+  std::shared_ptr<CameraNode> camera = std::make_shared<CameraNode>(CameraNode("camera", root_node));
+
+  std::cout << solarSystem_.printGraph() << std::endl;
+}
+
+//void ApplicationSolar::makePlanet(std::string const& name, std::shared_ptr<Node> const& parent){
+//  std::shared_ptr<Node> planet_holder = std::make_shared<Node>(Node(name + " holder", parent));
+//  std::shared_ptr<GeometryNode> planet = std::make_shared<GeometryNode>(GeometryNode(name, planet_holder));
+//  parent->addChild(planet_holder);
+//  planet_holder->addChild(planet);
+//}
 
 void ApplicationSolar::render() const {
   // bind shader to upload uniforms

@@ -11,17 +11,25 @@ Node::Node() : name_("root"),
 {}
 Node::Node(
     std::string const& name,
+    std::shared_ptr<Node> const& parent
+) : name_(name),
+    parent_(parent),
+    path_(""),
+    depth_(parent->getDepth()+1),
+    worldTransform_(glm::mat4(1)),
+    localTransform_(glm::mat4(1)){}
+Node::Node(
+    std::string const& name,
     std::shared_ptr<Node> const& parent,
     std::list<std::shared_ptr<Node>> const& children,
     std::string const& path,
-    int depth,
     glm::mat4 const& worldTransform,
     glm::mat4 const& localTansform
 ) : name_(name),
     parent_(parent),
     children_(children),
     path_(path),
-    depth_(depth),
+    depth_(parent->getDepth()+1),
     worldTransform_(worldTransform),
     localTransform_(localTansform)
 {}
