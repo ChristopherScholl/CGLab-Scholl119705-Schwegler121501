@@ -21,10 +21,6 @@ class Node {
       glm::mat4 const& worldTransform,
       glm::mat4 const& localTansform
   );
-  Node(
-      glm::mat4 const& worldTransform,
-      glm::mat4 const& localTansform
-  );
 
   // get attribute methods
   std::string getName();

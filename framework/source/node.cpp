@@ -1,33 +1,29 @@
 #include "node.hpp"
 
 // constructors
-Node::Node(){}
+Node::Node() : name_("root"),
+    parent_(nullptr),
+    children_(),
+    path_(""),
+    depth_(0),
+    worldTransform_(glm::mat4(1)),
+    localTransform_(glm::mat4(1))
+{}
 Node::Node(
     std::string const& name,
     std::shared_ptr<Node> const& parent,
     std::list<std::shared_ptr<Node>> const& children,
     std::string const& path,
     int depth,
-    glm::mat4 const& world_transform,
-    glm::mat4 const& local_tansform
+    glm::mat4 const& worldTransform,
+    glm::mat4 const& localTansform
 ) : name_(name),
     parent_(parent),
     children_(children),
     path_(path),
     depth_(depth),
-    worldTransform_(world_transform),
-    localTransform_(local_tansform)
-{}
-Node::Node(
-    glm::mat4 const& world_transform,
-    glm::mat4 const& local_transform
-) : name_("root"),
-    parent_(nullptr),
-    children_(),
-    path_(""),
-    depth_(0),
-    worldTransform_(world_transform),
-    localTransform_(local_transform)
+    worldTransform_(worldTransform),
+    localTransform_(localTansform)
 {}
 
 // get attribute methods
@@ -69,6 +65,21 @@ std::shared_ptr<Node> Node::getChild(std::string const& childName){
     for (std::shared_ptr<Node> node : children_){
         if(node->getName() == childName){
             return node;
+        }
+    }
+    return nullptr;
+}
+
+// add one child
+void Node::addChild(std::shared_ptr<Node> const& node){
+    children_.push_back(node);
+}
+
+// remove one child
+void Node::removeChild(std::string const& childName){
+    for(std::shared_ptr<Node> child : children_){
+        if(child->getName().compare(childName) == 0){
+            children_.remove(child);
         }
     }
 }

@@ -1,7 +1,14 @@
 #include "camera_node.hpp"
 
-//CameraNode::CameraNode(std::shared_ptr<Node> parent, std::string const& name) :
-//    Node{parent, name} {}
+// constructors
+CameraNode::CameraNode(){}
+CameraNode::CameraNode(
+  bool isPerspective, bool isEnabled, glm::mat4 const& projectionMatrix
+) :
+  isPerspective_(isPerspective), isEnabled_(isEnabled), projectionMatrix_(projectionMatrix)
+{}
+
+// get attribute methods
 bool CameraNode::getPerspective() const { 
   return isPerspective_;
 }
@@ -11,6 +18,8 @@ bool CameraNode::getEnabled() const {
 glm::mat4 CameraNode::getProjectionMatrix() const {
   return projectionMatrix_;
 }
+
+// set attribute methods
 void CameraNode::setEnabled(bool is_enabled) {
   isEnabled_ = is_enabled;
 }

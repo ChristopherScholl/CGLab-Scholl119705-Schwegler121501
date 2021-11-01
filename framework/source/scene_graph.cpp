@@ -1,7 +1,7 @@
 #include "scene_graph.hpp"
 
 // constructors
-SceneGraph::SceneGraph() : name_("SceneGraph"), rootNode_(std::make_shared<Node>(Node())) {}
+SceneGraph::SceneGraph() : name_("DefaultSceneGraph"), rootNode_(std::make_shared<Node>(Node())) {}
 SceneGraph::SceneGraph(std::string const& name) : name_(name), rootNode_(std::make_shared<Node>(Node())){}
 SceneGraph::SceneGraph(std::string const& name, std::shared_ptr<Node> const& rootNode) : name_(name), rootNode_(rootNode){}
 

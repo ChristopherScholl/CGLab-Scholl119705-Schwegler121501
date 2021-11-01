@@ -159,5 +159,7 @@ void ApplicationSolar::resizeCallback(unsigned width, unsigned height) {
 
 // exe entry point
 int main(int argc, char* argv[]) {
+  SceneGraph s = SceneGraph();
+  std::cout << s.printGraph() << std::endl;
   Application::run<ApplicationSolar>(argc, argv, 3, 2);
 }
