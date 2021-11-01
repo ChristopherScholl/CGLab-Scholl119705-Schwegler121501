@@ -4,6 +4,7 @@
 #include "application.hpp"
 #include "model.hpp"
 #include "structs.hpp"
+#include "scene_graph.hpp"
 
 // gpu representation of model
 class ApplicationSolar : public Application {

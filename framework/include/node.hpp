@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 #include <list>
-#include "../../external/glm-0.9.6.3/glm/glm.hpp"
+#include <../../external/glm-0.9.6.3/glm/glm.hpp>
 #include <model.hpp>
 #include "node.hpp"
 
@@ -18,12 +18,12 @@ class Node {
       std::list<std::shared_ptr<Node>> const& children,
       std::string const& path,
       int depth,
-      glm::mat4 const& world_transform,
-      glm::mat4 const& local_tansform
+      glm::mat4 const& worldTransform,
+      glm::mat4 const& localTansform
   );
   Node(
-      glm::mat4 const& world_transform,
-      glm::mat4 const& local_tansform
+      glm::mat4 const& worldTransform,
+      glm::mat4 const& localTansform
   );
 
   // get attribute methods
@@ -37,13 +37,13 @@ class Node {
 
   // set attribute methods
   void setParent(std::shared_ptr<Node> const& parent);
-  void setWorldTransform(glm::mat4 const& world_transform);
-  void setLocalTransform(glm::mat4 const& local_transform);
+  void setWorldTransform(glm::mat4 const& worldTransform);
+  void setLocalTransform(glm::mat4 const& localTransform);
 
   // child specific methods
-  std::shared_ptr<Node> getChild(std::string const& child_name);
+  std::shared_ptr<Node> getChild(std::string const& childName);
   void addChild(std::shared_ptr<Node> const&);
-  void removeChild(std::string const& child_name);
+  void removeChild(std::string const& childName);
  
  private:
   // attributes
@@ -52,8 +52,8 @@ class Node {
   std::list<std::shared_ptr<Node>> children_;
   std::string path_;
   int depth_;
-  glm::mat4 world_transform_;
-  glm::mat4 local_transform_;
+  glm::mat4 worldTransform_;
+  glm::mat4 localTransform_;
 };
 
 #endif

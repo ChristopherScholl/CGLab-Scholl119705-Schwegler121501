@@ -5,10 +5,16 @@
 #include <memory>
 #include "node.hpp"
 
-// 
 class GeometryNode : public Node {
  public:
+  // constructors
+  GeometryNode();
+  GeometryNode(model const& geometry);
+  
+  // get attribute methods
   model getGeometry() const;
+
+  // set attribute methods
   void setGeometry(model const& geometry);
  
  private:
