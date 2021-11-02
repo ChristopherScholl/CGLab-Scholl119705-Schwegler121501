@@ -49,10 +49,20 @@ void ApplicationSolar::initializeSolarSystem(){
   GeometryNode sun = GeometryNode("sun", sun_holder_pointer);
   std::shared_ptr<GeometryNode> sun_pointer = std::make_shared<GeometryNode>(sun);
   sun_holder_pointer->addChild(sun_pointer);
-  std::cout << sun_pointer->getName() << std::endl;
 
   // planets
+  makePlanet("mercury", root_node_pointer);
+  makePlanet("venus", root_node_pointer);
+  makePlanet("earth", root_node_pointer);
+  makePlanet("mars", root_node_pointer);
+  makePlanet("jupiter", root_node_pointer);
+  makePlanet("saturn", root_node_pointer);
+  makePlanet("uranus", root_node_pointer);
+  makePlanet("neptune", root_node_pointer);
   
+  // moons
+  std::shared_ptr<Node> earth_holder_pointer = root_node_pointer->getChild("earth holder");
+  makePlanet("moon", earth_holder_pointer);
 
   // camera
   CameraNode camera = CameraNode("camera", root_node_pointer);
@@ -62,12 +72,14 @@ void ApplicationSolar::initializeSolarSystem(){
   std::cout << solarSystem_.printGraph() << std::endl;
 }
 
-//void ApplicationSolar::makePlanet(std::string const& name, std::shared_ptr<Node> const& parent){
-//  std::shared_ptr<Node> planet_holder = std::make_shared<Node>(Node(name + " holder", parent));
-//  std::shared_ptr<GeometryNode> planet = std::make_shared<GeometryNode>(GeometryNode(name, planet_holder));
-//  parent->addChild(planet_holder);
-//  planet_holder->addChild(planet);
-//}
+void ApplicationSolar::makePlanet(std::string const& name, std::shared_ptr<Node> const& parent){
+  Node planet_holder = Node(name + " holder", parent);
+  std::shared_ptr<Node> planet_holder_pointer = std::make_shared<Node>(planet_holder);
+  parent->addChild(planet_holder_pointer);
+  GeometryNode planet = GeometryNode(name, planet_holder_pointer);
+  std::shared_ptr<GeometryNode> planet_pointer = std::make_shared<GeometryNode>(planet);
+  planet_holder_pointer->addChild(planet_pointer);
+}
 
 void ApplicationSolar::render() const {
   // bind shader to upload uniforms

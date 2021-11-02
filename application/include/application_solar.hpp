@@ -38,7 +38,7 @@ class ApplicationSolar : public Application {
 
   // create Scene Graph
   void initializeSolarSystem();
-  //void makePlanet(std::string const& name, std::shared_ptr<Node> const& parent);
+  void makePlanet(std::string const& name, std::shared_ptr<Node> const& parent);
 
   // cpu representation of model
   model_object planet_object;
