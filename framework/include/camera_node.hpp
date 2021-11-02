@@ -5,7 +5,7 @@
 #include <memory>
 #include "node.hpp"
 
-class CameraNode : Node {
+class CameraNode : public Node {
 public:
     // constructors
     CameraNode();
