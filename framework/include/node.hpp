@@ -21,8 +21,8 @@ class Node {
       std::shared_ptr<Node> const& parent,
       std::list<std::shared_ptr<Node>> const& children,
       std::string const& path,
-      glm::mat4 const& worldTransform,
-      glm::mat4 const& localTansform
+      glm::fmat4 const& worldTransform,
+      glm::fmat4 const& localTansform
   );
 
   // get attribute methods
@@ -31,13 +31,13 @@ class Node {
   std::list<std::shared_ptr<Node>> getChildren();
   std::string getPath();
   int getDepth();
-  glm::mat4 getWorldTransform();
-  glm::mat4 getLocalTransform();
+  glm::fmat4 getWorldTransform();
+  glm::fmat4 getLocalTransform();
 
   // set attribute methods
   void setParent(std::shared_ptr<Node> const& parent);
-  void setWorldTransform(glm::mat4 const& worldTransform);
-  void setLocalTransform(glm::mat4 const& localTransform);
+  void setWorldTransform(glm::fmat4 const& worldTransform);
+  void setLocalTransform(glm::fmat4 const& localTransform);
 
   // child specific methods
   std::shared_ptr<Node> getChild(std::string const& childName);
@@ -51,8 +51,8 @@ class Node {
   std::list<std::shared_ptr<Node>> children_;
   std::string path_;
   int depth_;
-  glm::mat4 worldTransform_;
-  glm::mat4 localTransform_;
+  glm::fmat4 worldTransform_;
+  glm::fmat4 localTransform_;
 };
 
 #endif
