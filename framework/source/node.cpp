@@ -51,7 +51,11 @@ int Node::getDepth(){
     return depth_;
 }
 glm::mat4 Node::getWorldTransform(){
-    return worldTransform_;
+    if (depth_ != 0){
+        return parent_->getWorldTransform() * localTransform_;
+    }else{
+        return localTransform_;
+    }
 }
 glm::mat4 Node::getLocalTransform(){
     return localTransform_;

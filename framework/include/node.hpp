@@ -1,7 +1,7 @@
 #ifndef NODE_HPP
 #define NODE_HPP
 
-#include <string>
+#include <iostream>
 #include <memory>
 #include <list>
 #include <../../external/glm-0.9.6.3/glm/glm.hpp>

@@ -34,7 +34,7 @@ std::string SceneGraph::printNode(std::shared_ptr<Node> const& node){
     if (children.size() > 0) {
         outputString.append(" -> (");
         for (auto child : children){
-            outputString.append(printNode(node) + ", ");
+            outputString.append(printNode(child) + ", ");
         } 
         // remove last comma
         outputString = outputString.substr(0, outputString.size()-2);

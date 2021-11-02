@@ -26,8 +26,8 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  ,m_view_projection{utils::calculate_projection_matrix(initial_aspect_ratio)}
 {
   initializeGeometry();
-  initializeSolarSystem();
   initializeShaderPrograms();
+  initializeSolarSystem();
 }
 
 ApplicationSolar::~ApplicationSolar() {
@@ -38,20 +38,26 @@ ApplicationSolar::~ApplicationSolar() {
 
 void ApplicationSolar::initializeSolarSystem(){
   // root
-  std::shared_ptr<Node> root_node = std::make_shared<Node>(Node());
-  solarSystem_ = SceneGraph("Solar System", root_node);
+  Node root_node = Node();
+  std::shared_ptr<Node> root_node_pointer = std::make_shared<Node>(root_node);
+  solarSystem_ = SceneGraph("Solar System", root_node_pointer);
 
   // sun
-  std::shared_ptr<Node> sun_holder = std::make_shared<Node>(Node("sun holder", root_node));
-  root_node->addChild(sun_holder);
-  std::shared_ptr<GeometryNode> sun = std::make_shared<GeometryNode>(GeometryNode("sun", sun_holder));
-  sun_holder->addChild(sun);
+  Node sun_holder = Node("sun holder", root_node_pointer);
+  std::shared_ptr<Node> sun_holder_pointer = std::make_shared<Node>(sun_holder);
+  root_node_pointer->addChild(sun_holder_pointer);
+  GeometryNode sun = GeometryNode("sun", sun_holder_pointer);
+  std::shared_ptr<GeometryNode> sun_pointer = std::make_shared<GeometryNode>(sun);
+  sun_holder_pointer->addChild(sun_pointer);
+  std::cout << sun_pointer->getName() << std::endl;
 
   // planets
   
 
   // camera
-  std::shared_ptr<CameraNode> camera = std::make_shared<CameraNode>(CameraNode("camera", root_node));
+  CameraNode camera = CameraNode("camera", root_node_pointer);
+  std::shared_ptr<CameraNode> camera_pointer = std::make_shared<CameraNode>(camera);
+  root_node_pointer->addChild(camera_pointer);
 
   std::cout << solarSystem_.printGraph() << std::endl;
 }
@@ -187,7 +193,18 @@ void ApplicationSolar::resizeCallback(unsigned width, unsigned height) {
 
 // exe entry point
 int main(int argc, char* argv[]) {
-  SceneGraph s = SceneGraph();
-  std::cout << s.printGraph() << std::endl;
+
+  // root
+  Node root_node = Node();
+  
+  std::shared_ptr<Node> root_node_pointer = std::make_shared<Node>(root_node);
+
+  Node sun_holder = Node("sun holder", root_node_pointer);
+  std::shared_ptr<Node> sun_holder_pointer = std::make_shared<Node>(sun_holder);
+  root_node_pointer->addChild(sun_holder_pointer);
+
+  SceneGraph s2 = SceneGraph("Solar System", root_node_pointer);
+  std::cout << s2.printGraph() << std::endl;
+
   Application::run<ApplicationSolar>(argc, argv, 3, 2);
 }
