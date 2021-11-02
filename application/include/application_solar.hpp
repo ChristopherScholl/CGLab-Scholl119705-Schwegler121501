@@ -25,6 +25,8 @@ class ApplicationSolar : public Application {
 
   // draw all objects
   void render() const;
+  // draw single planet
+  void renderPlanet()const;
 
  protected:
   void initializeShaderPrograms();
@@ -38,6 +40,7 @@ class ApplicationSolar : public Application {
 
   // create Scene Graph
   void initializeSolarSystem();
+  // create single planet
   void makePlanet(std::string const& name, std::shared_ptr<Node> const& parent);
 
   // cpu representation of model
