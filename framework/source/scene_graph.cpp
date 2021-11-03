@@ -30,12 +30,12 @@ void SceneGraph::addPlanet(std::shared_ptr<GeometryNode> planet){
 }
 
 // print methods
-std::string SceneGraph::printGraph(){
+std::string SceneGraph::printGraph()const{
     return "Name: " + name_ + ", Nodes: " + printNode(rootNode_);
 }
-std::string SceneGraph::printNode(std::shared_ptr<Node> const& node){
+std::string SceneGraph::printNode(std::shared_ptr<Node> const& node)const{
     // print name
-    std::string outputString = node->getName();
+    std::string outputString = node->getName() + "(" + glm::to_string(node->getWorldTransform()) + ")";
     
     // print every child node
     std::list<std::shared_ptr<Node>> children = node->getChildren();

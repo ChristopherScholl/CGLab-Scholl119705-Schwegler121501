@@ -49,7 +49,7 @@ void ApplicationSolar::initializeSolarSystem(){
   Node sun_holder = Node("sun holder", root_node_pointer, sun_localTransform);
   std::shared_ptr<Node> sun_holder_pointer = std::make_shared<Node>(sun_holder);
   root_node_pointer->addChild(sun_holder_pointer);
-  GeometryNode sun = GeometryNode("sun", sun_holder_pointer, glm::fmat4(1), 0.7f, 1.0f, 0.0f);
+  GeometryNode sun = GeometryNode("sun", sun_holder_pointer, glm::fmat4(1), 0.7f, 0.001f, 0.0f);
   std::shared_ptr<GeometryNode> sun_pointer = std::make_shared<GeometryNode>(sun);
   sun_holder_pointer->addChild(sun_pointer);
 
@@ -110,14 +110,15 @@ void ApplicationSolar::render() const {
   // draw something idk
   glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
 
-  sun_model_matrix = glm::rotate(sun_model_matrix, float(glfwGetTime()), glm::fvec3{0.0f, sun->getSpeed(), 0.0f});
-  sun_model_matrix = glm::translate(sun_model_matrix, glm::fvec3{0.0f, 0.0f, sun->getDistance()});
-  solarSystem_.getRoot()->setLocalTransform(sun_model_matrix);
+  glm::fmat4 model_matrix = glm::rotate(solarSystem_.getRoot()->getWorldTransform(), float(glfwGetTime()), glm::fvec3{0.0f, sun->getSpeed(), 0.0f});
+  solarSystem_.getRoot()->setLocalTransform(model_matrix);
 
   auto planets = solarSystem_.getPlanets();
   for (auto planet : planets){
     renderPlanet(planet);
   }
+
+  //std::cout << solarSystem_.printGraph() << std::endl;
 }
 
 void ApplicationSolar::renderPlanet(std::shared_ptr<GeometryNode> planet)const{

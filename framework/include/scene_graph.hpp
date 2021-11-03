@@ -22,7 +22,7 @@ class SceneGraph {
   void addPlanet(std::shared_ptr<GeometryNode> planet);
 
   // print method
-  std::string printGraph();
+  std::string printGraph()const;
  
  private:
   // set attribute methods
@@ -30,7 +30,7 @@ class SceneGraph {
   void setRoot(std::shared_ptr<Node> const& rootNode);
 
   // recursive print method for individual node
-  std::string printNode(std::shared_ptr<Node> const& node);
+  std::string printNode(std::shared_ptr<Node> const& node)const;
 
   // attributes
   std::string name_;
