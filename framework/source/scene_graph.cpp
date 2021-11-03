@@ -6,11 +6,14 @@ SceneGraph::SceneGraph(std::string const& name) : name_(name), rootNode_(std::ma
 SceneGraph::SceneGraph(std::string const& name, std::shared_ptr<Node> const& rootNode) : name_(name), rootNode_(rootNode){}
 
 // get attribute methods
-std::string SceneGraph::getName(){
+std::string SceneGraph::getName()const{
     return name_;
 }
-std::shared_ptr<Node> SceneGraph::getRoot(){
+std::shared_ptr<Node> SceneGraph::getRoot()const{
     return rootNode_;
+}
+std::list<std::shared_ptr<GeometryNode>> SceneGraph::getPlanets()const{
+    return planets_;
 }
 
 // set attribute methods
@@ -19,6 +22,11 @@ void SceneGraph::setName(std::string const& name){
 }
 void SceneGraph::setRoot(std::shared_ptr<Node> const& rootNode){
     rootNode_ = rootNode;
+}
+
+// add planet
+void SceneGraph::addPlanet(std::shared_ptr<GeometryNode> planet){
+    planets_.push_back(planet);
 }
 
 // print methods

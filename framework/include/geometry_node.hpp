@@ -10,10 +10,20 @@ class GeometryNode : public Node {
   // constructors
   GeometryNode();
   GeometryNode(model const& geometry);
-  GeometryNode(std::string const& name, std::shared_ptr<Node> const& parent);
+  GeometryNode::GeometryNode(
+  std::string const& name,
+  std::shared_ptr<Node> const& parent,
+  glm::fmat4 const& localTansform,
+  float size,
+  float speed,
+  float distance
+  );
   
   // get attribute methods
   model getGeometry() const;
+  float getSize() const;
+  float getSpeed() const;
+  float getDistance() const;
 
   // set attribute methods
   void setGeometry(model const& geometry);
@@ -21,6 +31,9 @@ class GeometryNode : public Node {
  private:
   // attributes
   model geometry_;
+  float size_;
+  float speed_;
+  float distance_;
 };
 
 #endif

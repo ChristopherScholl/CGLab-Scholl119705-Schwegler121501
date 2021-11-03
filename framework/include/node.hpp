@@ -14,14 +14,14 @@ class Node {
   Node();
   Node(
       std::string const& name,
-      std::shared_ptr<Node> const& parent
+      std::shared_ptr<Node> const& parent,
+      glm::fmat4 const& localTansform
   );
   Node(
       std::string const& name,
       std::shared_ptr<Node> const& parent,
       std::list<std::shared_ptr<Node>> const& children,
       std::string const& path,
-      glm::fmat4 const& worldTransform,
       glm::fmat4 const& localTansform
   );
 
@@ -33,6 +33,11 @@ class Node {
   int getDepth();
   glm::fmat4 getWorldTransform();
   glm::fmat4 getLocalTransform();
+
+  // get methods of derived class
+  virtual float getSize() const;
+  virtual float getSpeed() const;
+  virtual float getDistance() const;
 
   // set attribute methods
   void setParent(std::shared_ptr<Node> const& parent);

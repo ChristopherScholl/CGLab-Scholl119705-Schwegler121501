@@ -7,32 +7,30 @@ Node::Node() : name_("root"),
     path_(""),
     depth_(0),
     worldTransform_(glm::fmat4(1)),
-    localTransform_(glm::fmat4(1))
-{}
+    localTransform_(glm::fmat4(1)){}
 Node::Node(
     std::string const& name,
-    std::shared_ptr<Node> const& parent
+    std::shared_ptr<Node> const& parent,
+    glm::fmat4 const& localTansform
 ) : name_(name),
     parent_(parent),
     path_(""),
     depth_(parent->getDepth()+1),
-    worldTransform_(glm::fmat4(1)),
-    localTransform_(glm::fmat4(1)){}
+    localTransform_(localTansform)
+    {setLocalTransform(localTansform);}
 Node::Node(
     std::string const& name,
     std::shared_ptr<Node> const& parent,
     std::list<std::shared_ptr<Node>> const& children,
     std::string const& path,
-    glm::fmat4 const& worldTransform,
     glm::fmat4 const& localTansform
 ) : name_(name),
     parent_(parent),
     children_(children),
     path_(path),
     depth_(parent->getDepth()+1),
-    worldTransform_(worldTransform),
     localTransform_(localTansform)
-{}
+    {setLocalTransform(localTansform);}
 
 // get attribute methods
 std::string Node::getName(){
@@ -51,14 +49,21 @@ int Node::getDepth(){
     return depth_;
 }
 glm::fmat4 Node::getWorldTransform(){
-    if (depth_ != 0){
-        return parent_->getWorldTransform() * localTransform_;
-    }else{
-        return localTransform_;
-    }
+    return worldTransform_;
 }
 glm::fmat4 Node::getLocalTransform(){
     return localTransform_;
+}
+
+// get methods of derived class
+float Node::getSize() const{
+    return 1.0f;
+}
+float Node::getSpeed() const{
+    return 1.0f;
+}
+float Node::getDistance() const{
+    return 1.0f;
 }
 
 // set methods
@@ -66,10 +71,24 @@ void Node::setParent(std::shared_ptr<Node> const& parent){
     parent_ = parent;
 }
 void Node::setWorldTransform(glm::fmat4 const& worldTransform){
-    worldTransform_ = worldTransform;
+    worldTransform_ = worldTransform * localTransform_;
+
+    for(auto child : children_){
+        child->setWorldTransform(worldTransform_);
+    }
 }
 void Node::setLocalTransform(glm::fmat4 const& localTransform){
     localTransform_ = localTransform;
+
+    if (depth_ != 0){
+        worldTransform_ = parent_->getWorldTransform() * localTransform_;
+    }else{
+        worldTransform_ = localTransform_;
+    }
+
+    for(auto child : children_){
+        child->setWorldTransform(worldTransform_);
+    }
 }
 
 // get one specific child

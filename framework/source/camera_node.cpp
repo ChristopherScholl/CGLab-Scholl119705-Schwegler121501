@@ -7,7 +7,7 @@ CameraNode::CameraNode(
 ) :
   isPerspective_(isPerspective), isEnabled_(isEnabled), projectionMatrix_(projectionMatrix)
 {}
-CameraNode::CameraNode(std::string const& name, std::shared_ptr<Node> const& parent) : Node(name, parent){}
+CameraNode::CameraNode(std::string const& name, std::shared_ptr<Node> const& parent, glm::fmat4 const& localTansform) : Node(name, parent, localTansform){}
 
 // get attribute methods
 bool CameraNode::getPerspective() const { 
