@@ -98,8 +98,6 @@ void ApplicationSolar::render() const {
   for (auto planet : planets){
     renderPlanet(planet);
   }
-
-  //std::cout << solarSystem_.printGraph() << std::endl;
 }
 
 void ApplicationSolar::renderPlanet(std::shared_ptr<GeometryNode> planet)const{

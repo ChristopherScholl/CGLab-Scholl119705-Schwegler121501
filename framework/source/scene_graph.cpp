@@ -35,7 +35,7 @@ std::string SceneGraph::printGraph()const{
 }
 std::string SceneGraph::printNode(std::shared_ptr<Node> const& node)const{
     // print name
-    std::string outputString = node->getName() + "(" + glm::to_string(node->getWorldTransform()) + ")";
+    std::string outputString = node->getName()/* + "(" + glm::to_string(node->getWorldTransform()) + ")"*/;
     
     // print every child node
     std::list<std::shared_ptr<Node>> children = node->getChildren();
