@@ -37,35 +37,29 @@ ApplicationSolar::~ApplicationSolar() {
 }
 
 void ApplicationSolar::initializeSolarSystem(){
-  // root
+  // root node
   Node root_node = Node();
   std::shared_ptr<Node> root_node_pointer = std::make_shared<Node>(root_node);
+
+  // create scene graph
   solarSystem_ = SceneGraph("Solar System", root_node_pointer);
 
   // sun
-  glm::fmat4 sun_localTransform = glm::scale(glm::fmat4{}, glm::fvec3{0.7f, 0.7f, 0.7f});
-  sun_localTransform = glm::rotate(sun_localTransform, float(glfwGetTime()), glm::fvec3{0.0f, 1.0f, 0.0f});
-
-  Node sun_holder = Node("sun holder", root_node_pointer, sun_localTransform);
-  std::shared_ptr<Node> sun_holder_pointer = std::make_shared<Node>(sun_holder);
-  root_node_pointer->addChild(sun_holder_pointer);
-  GeometryNode sun = GeometryNode("sun", sun_holder_pointer, glm::fmat4(1), 0.7f, 0.001f, 0.0f);
-  std::shared_ptr<GeometryNode> sun_pointer = std::make_shared<GeometryNode>(sun);
-  sun_holder_pointer->addChild(sun_pointer);
+  makePlanet("sun", root_node_pointer, 0.7f, 0.0f, 0.0f);
 
   // planets
-  makePlanet("mercury", root_node_pointer, 0.1f, 2.0f, 2.0f);
-  makePlanet("venus", root_node_pointer, 0.3f, 1.9f, 3.0f);
-  makePlanet("earth", root_node_pointer, 0.3f, 1.7f, 4.0f);
-  makePlanet("mars", root_node_pointer, 0.2f, 1.8f, 5.0f);
-  makePlanet("jupiter", root_node_pointer, 0.6f, 0.9f, 6.0f);
-  makePlanet("saturn", root_node_pointer, 0.5f, 1.0f, 7.0f);
-  makePlanet("uranus", root_node_pointer, 0.4f, 0.5f, 8.0f);
-  makePlanet("neptune", root_node_pointer, 0.4f, 0.4f, 9.0f);
+  //makePlanet("mercury", root_node_pointer, 0.1f, 0.2f, 4.0f);
+  makePlanet("venus", root_node_pointer, 0.3f, 0.19f, 6.0f);
+  makePlanet("earth", root_node_pointer, 0.3f, 0.17f, 8.0f);
+  makePlanet("mars", root_node_pointer, 0.2f, 0.18f, 10.0f);
+  //makePlanet("jupiter", root_node_pointer, 0.6f, 0.09f, 18.0f);
+  //makePlanet("saturn", root_node_pointer, 0.5f, 0.10f, 22.0f);
+  //makePlanet("uranus", root_node_pointer, 0.4f, 0.05f, 26.0f);
+  //makePlanet("neptune", root_node_pointer, 0.4f, 0.04f, 30.0f);
   
   // moons
   std::shared_ptr<Node> earth_holder_pointer = root_node_pointer->getChild("earth holder");
-  makePlanet("moon", earth_holder_pointer, 0.1f, 1.3f, 1.0f);
+  makePlanet("moon", earth_holder_pointer, 0.1f, 1.3f, 15.0f);
 
   // camera
   CameraNode camera = CameraNode("camera", root_node_pointer, glm::fmat4(1));
@@ -76,13 +70,17 @@ void ApplicationSolar::initializeSolarSystem(){
 }
 
 void ApplicationSolar::makePlanet(std::string const& name, std::shared_ptr<Node> const& parent, float size, float speed, float distance){
+  // set up local transform matrix
   glm::fmat4 localTransform = glm::scale(glm::fmat4{}, glm::fvec3{size, size, size});
-  localTransform = glm::rotate(localTransform, float(glfwGetTime()), glm::fvec3{0.0f, speed, 0.0f});
+  localTransform = glm::rotate(localTransform, float(glfwGetTime()) * speed, glm::fvec3{0.0f, 1.0f, 0.0f});
   localTransform = glm::translate(localTransform, glm::fvec3{0.0f, 0.0f, distance});
 
+  // create holder node
   Node planet_holder = Node(name + " holder", parent, localTransform);
   std::shared_ptr<Node> planet_holder_pointer = std::make_shared<Node>(planet_holder);
   parent->addChild(planet_holder_pointer);
+
+  // create geometry node
   GeometryNode planet = GeometryNode(name, planet_holder_pointer, glm::fmat4(1), size, speed, distance);
   std::shared_ptr<GeometryNode> planet_pointer = std::make_shared<GeometryNode>(planet);
   planet_holder_pointer->addChild(planet_pointer);
@@ -91,28 +89,11 @@ void ApplicationSolar::makePlanet(std::string const& name, std::shared_ptr<Node>
 }
 
 void ApplicationSolar::render() const {
-  // bind shader to upload uniforms
-  glUseProgram(m_shaders.at("planet").handle);
+  // render sun
+  auto sun = std::dynamic_pointer_cast<GeometryNode>(solarSystem_.getRoot()->getChild("sun holder")->getChild("sun"));
+  renderPlanet(sun);
 
-  std::shared_ptr<Node> sun = solarSystem_.getRoot()->getChild("sun holder")->getChild("sun");
-  glm::fmat4 sun_model_matrix = sun->getWorldTransform();
-  glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ModelMatrix"),
-                     1, GL_FALSE, glm::value_ptr(sun_model_matrix));
-  
-  // extra matrix for normal transformation to keep them orthogonal to surface
-  glm::fmat4 sun_normal_matrix = glm::inverseTranspose(glm::inverse(m_view_transform) * sun_model_matrix);
-  glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("NormalMatrix"),
-                     1, GL_FALSE, glm::value_ptr(sun_normal_matrix));
-  
-  // bind the VAO to draw
-  glBindVertexArray(planet_object.vertex_AO);
-
-  // draw something idk
-  glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
-
-  glm::fmat4 model_matrix = glm::rotate(solarSystem_.getRoot()->getWorldTransform(), float(glfwGetTime()), glm::fvec3{0.0f, sun->getSpeed(), 0.0f});
-  solarSystem_.getRoot()->setLocalTransform(model_matrix);
-
+  // render planets
   auto planets = solarSystem_.getPlanets();
   for (auto planet : planets){
     renderPlanet(planet);
@@ -125,12 +106,12 @@ void ApplicationSolar::renderPlanet(std::shared_ptr<GeometryNode> planet)const{
   // bind shader to upload uniforms
   glUseProgram(m_shaders.at("planet").handle);
 
-  glm::fmat4 planet_model_matrix = planet->getWorldTransform();
+  glm::fmat4 planetWorldTransform = planet->getWorldTransform();
   glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ModelMatrix"),
-                     1, GL_FALSE, glm::value_ptr(planet_model_matrix));
+                     1, GL_FALSE, glm::value_ptr(planetWorldTransform));
   
   // extra matrix for normal transformation to keep them orthogonal to surface
-  glm::fmat4 planet_normal_matrix = glm::inverseTranspose(glm::inverse(m_view_transform) * planet_model_matrix);
+  glm::fmat4 planet_normal_matrix = glm::inverseTranspose(glm::inverse(m_view_transform) * planetWorldTransform);
   glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("NormalMatrix"),
                      1, GL_FALSE, glm::value_ptr(planet_normal_matrix));
   
@@ -139,9 +120,10 @@ void ApplicationSolar::renderPlanet(std::shared_ptr<GeometryNode> planet)const{
 
   glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
 
-  planet_model_matrix = glm::rotate(planet_model_matrix, float(glfwGetTime()), glm::fvec3{0.0f, planet->getSpeed(), 0.0f});
-  planet_model_matrix = glm::translate(planet_model_matrix, glm::fvec3{0.0f, 0.0f, planet->getDistance()});
-  planet->getParent()->setLocalTransform(planet_model_matrix);
+  // calculate next step
+  planetWorldTransform = glm::translate(planet->getParent()->getParent()->getWorldTransform(), glm::fvec3{0.0f, 0.0f, planet->getDistance()});
+  planetWorldTransform = glm::rotate(planetWorldTransform, float(glfwGetTime()) * planet->getSpeed(), glm::fvec3{0.0f, 1.0f, 0.0f});
+  planet->getParent()->setWorldTransform(planetWorldTransform);
 }
 
 void ApplicationSolar::uploadView() {
