@@ -71,11 +71,11 @@ void Node::setParent(std::shared_ptr<Node> const& parent){
     parent_ = parent;
 }
 void Node::setWorldTransform(glm::fmat4 const& worldTransform){
-    worldTransform_ = worldTransform * localTransform_;
-
     for(auto child : children_){
-        child->setWorldTransform(worldTransform_);
+        //child->setWorldTransform(worldTransform);
     }
+
+    worldTransform_ = worldTransform * localTransform_;
 }
 void Node::setLocalTransform(glm::fmat4 const& localTransform){
     localTransform_ = localTransform;
