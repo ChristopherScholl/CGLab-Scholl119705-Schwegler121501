@@ -52,14 +52,15 @@ void ApplicationSolar::initializeSolarSystem(){
   makePlanet("venus", root_node_pointer, 0.2f, 0.4f, 1.5f);
   makePlanet("earth", root_node_pointer, 0.2f, 0.3f, 2.5f);
   makePlanet("mars", root_node_pointer, 0.1f, 0.2f, 3.5f);
-  makePlanet("jupiter", root_node_pointer, 0.4f, 0.09f, 4.0f);
-  makePlanet("saturn", root_node_pointer, 0.4f, 0.10f, 5.0f);
-  makePlanet("uranus", root_node_pointer, 0.3f, 0.05f, 5.5f);
-  makePlanet("neptune", root_node_pointer, 0.3f, 0.04f, 6.0f);
+  makePlanet("jupiter", root_node_pointer, 0.4f, 0.09f, 5.0f);
+  makePlanet("saturn", root_node_pointer, 0.4f, 0.10f, 7.0f);
+  makePlanet("uranus", root_node_pointer, 0.3f, 0.05f, 9.0f);
+  makePlanet("neptune", root_node_pointer, 0.3f, 0.04f, 10.0f);
+  makePlanet("pluto", root_node_pointer, 0.04f, 0.06f, 10.5f);
   
   // moons
   std::shared_ptr<Node> earth_holder_pointer = root_node_pointer->getChild("earth holder");
-  makePlanet("moon", earth_holder_pointer, 1.0f, 1.3f, 1.0f);
+  makePlanet("moon", earth_holder_pointer, 1.0f, 1.3f, 0.6f);
 
   // camera
   CameraNode camera = CameraNode("camera", root_node_pointer, glm::fmat4(1));
@@ -208,6 +209,14 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
   }
   else if (key == GLFW_KEY_S  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
     m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, 0.0f, 0.1f});
+    uploadView();
+  }
+  else if (key == GLFW_KEY_A  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+    m_view_transform = glm::translate(m_view_transform, glm::fvec3{-0.1f, 0.0f, 0.0f});
+    uploadView();
+  }
+  else if (key == GLFW_KEY_D  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+    m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.1f, 0.0f, 0.0f});
     uploadView();
   }
 }
