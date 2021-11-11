@@ -18,16 +18,19 @@ using namespace gl;
 #include <glm/gtc/type_ptr.hpp>
 
 #include <iostream>
+#include <random>
 
 ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  :Application{resource_path}
  ,planet_object{}
+ ,star_object{}
  ,m_view_transform{glm::translate(glm::fmat4{}, glm::fvec3{0.0f, 0.0f, 4.0f})}
  ,m_view_projection{utils::calculate_projection_matrix(initial_aspect_ratio)}
 {
   initializeGeometry();
   initializeShaderPrograms();
   initializeSolarSystem();
+  initializeStars();
 }
 
 ApplicationSolar::~ApplicationSolar() {
@@ -88,6 +91,40 @@ void ApplicationSolar::makePlanet(std::string const& name, std::shared_ptr<Node>
   planet_holder_pointer->addChild(planet_pointer);
 
   solarSystem_.addPlanet(planet_pointer);
+}
+
+void ApplicationSolar::initializeStars(){
+  int number_stars = 12;
+  for(int i = 0; i < number_stars; i++){
+    // generate position
+    stars_.push_back(rand() % 1000 + 100);
+    stars_.push_back(rand() % 1000 + 100);
+    stars_.push_back(rand() % 1000 + 100);
+    // generate color
+    stars_.push_back(rand() % 256);
+    stars_.push_back(rand() % 256);
+    stars_.push_back(rand() % 256);
+  }
+
+  // generate vertex array object
+  glGenVertexArrays(1, &star_object.vertex_AO);
+  // bind the array for attaching buffers
+  glBindVertexArray(star_object.vertex_AO);
+
+  // generate generic buffer
+  glGenBuffers(1, &star_object.vertex_BO);
+  // bind this as an vertex array buffer containing all attributes
+  glBindBuffer(GL_ARRAY_BUFFER, star_object.vertex_BO);
+  // configure currently bound array buffer
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * number_stars * 6, stars_.data(), GL_STATIC_DRAW);
+
+  // first attribute
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float) * 3), 0);
+
+  // second attribute
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float) * 3), (void*) (sizeof(float)*3));
 }
 
 void ApplicationSolar::render() const {
@@ -160,6 +197,13 @@ void ApplicationSolar::initializeShaderPrograms() {
   m_shaders.at("planet").u_locs["ModelMatrix"] = -1;
   m_shaders.at("planet").u_locs["ViewMatrix"] = -1;
   m_shaders.at("planet").u_locs["ProjectionMatrix"] = -1;
+
+  // store shader program objects in container
+  m_shaders.emplace("star", shader_program{{{GL_VERTEX_SHADER,m_resource_path + "shaders/vao.vert"},
+                                           {GL_FRAGMENT_SHADER, m_resource_path + "shaders/vao.frag"}}});
+  m_shaders.at("star").u_locs["ModelMatrix"] = -1;
+  m_shaders.at("star").u_locs["ViewMatrix"] = -1;
+  m_shaders.at("star").u_locs["ProjectionMatrix"] = -1;
 }
 
 // load models

@@ -42,17 +42,21 @@ class ApplicationSolar : public Application {
   void initializeSolarSystem();
   // create single planet
   void makePlanet(std::string const& name, std::shared_ptr<Node> const& parent, float distance, float size, float speed);
+  // create stars
+  void initializeStars();
 
   // cpu representation of model
   model_object planet_object;
+  model_object star_object;
   
   // camera transform matrix
   glm::fmat4 m_view_transform;
   // camera projection matrix
   glm::fmat4 m_view_projection;
 
-  //private:
+private:
   SceneGraph solarSystem_;
+  std::vector<float> stars_;
 };
 
 #endif
