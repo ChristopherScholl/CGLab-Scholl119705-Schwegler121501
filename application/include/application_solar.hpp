@@ -27,6 +27,7 @@ class ApplicationSolar : public Application {
   void render() const;
   // draw single planet
   void renderPlanet(std::shared_ptr<GeometryNode> planet)const;
+  void renderStars()const;
 
  protected:
   void initializeShaderPrograms();
@@ -34,9 +35,9 @@ class ApplicationSolar : public Application {
   // update uniform values
   void uploadUniforms();
   // upload projection matrix
-  void uploadProjection();
+  void uploadProjection(std::string shader_name);
   // upload view matrix
-  void uploadView();
+  void uploadView(std::string shader_name);
 
   // create Scene Graph
   void initializeSolarSystem();
