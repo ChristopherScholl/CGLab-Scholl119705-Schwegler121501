@@ -94,18 +94,12 @@ void ApplicationSolar::makePlanet(std::string const& name, std::shared_ptr<Node>
 }
 
 void ApplicationSolar::initializeStars(){
-  int number_stars = 12;
-  //std::vector<float> position, color;
+  int number_stars = 1000;
   for(int i = 0; i < number_stars; i++){
-    //position = {float(rand() % 10 + 1),float(rand() % 10 + 1),float(rand() % 10 + 1)};
-    //color = {float(rand() % 256),float(rand() % 256),float(rand() % 256)};
-    //stars_.insert(stars_.end(), position.begin(), position.end());
-    //stars_.insert(stars_.end(), color.begin(), color.end());
-
     // generate position
-    stars_.push_back(float(rand() % 10 + 1));
-    stars_.push_back(float(rand() % 10 + 1));
-    stars_.push_back(float(rand() % 10 + 1));
+    stars_.push_back(float(rand() % 100 - 50));
+    stars_.push_back(float(rand() % 100 - 50));
+    stars_.push_back(- float(rand() % 100));
     // generate color
     stars_.push_back(float(rand() % 256));
     stars_.push_back(float(rand() % 256));
