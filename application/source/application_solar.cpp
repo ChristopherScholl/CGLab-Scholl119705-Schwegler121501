@@ -101,9 +101,9 @@ void ApplicationSolar::initializeStars(){
     stars_.push_back(float(rand() % 100 - 50));
     stars_.push_back(- float(rand() % 100));
     // generate color
-    stars_.push_back(float(rand() % 256));
-    stars_.push_back(float(rand() % 256));
-    stars_.push_back(float(rand() % 256));
+    stars_.push_back(float(rand() % 256) / 255);
+    stars_.push_back(float(rand() % 256) / 255);
+    stars_.push_back(float(rand() % 256) / 255);
   }
 
   // generate vertex array object
