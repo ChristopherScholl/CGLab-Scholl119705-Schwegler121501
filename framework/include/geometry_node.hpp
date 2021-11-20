@@ -10,7 +10,7 @@ class GeometryNode : public Node {
   // constructors
   GeometryNode();
   GeometryNode(model const& geometry);
-  GeometryNode::GeometryNode(
+  GeometryNode(
   std::string const& name,
   std::shared_ptr<Node> const& parent,
   glm::fmat4 const& localTansform,

@@ -7,7 +7,6 @@
 #include <../../external/glm-0.9.6.3/glm/glm.hpp>
 #include <../../external/glm-0.9.6.3/glm/ext.hpp>
 #include <model.hpp>
-#include "node.hpp"
 
 class Node {
  public:
