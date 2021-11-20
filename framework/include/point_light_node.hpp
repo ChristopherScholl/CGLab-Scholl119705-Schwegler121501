@@ -10,20 +10,20 @@ class PointLightNode : public Node {
  public:
   // constructors
   PointLightNode();
-  PointLightNode(float lightIntensity, color lightColor);
+  PointLightNode(float lightIntensity, glm::fvec3 lightColor);
   
   // get attribute methods
   float getIntensity() const;
-  color getColor() const;
+  glm::fvec3 getColor() const;
 
   // set attribute methods
   void setIntensity(float lightIntensity);
-  void setColor(color lightColor);
+  void setColor(glm::fvec3 lightColor);
  
  private:
   // attributes
   float lightIntensity_;
-  color lightColor_;
+  glm::fvec3 lightColor_;
 };
 
 #endif

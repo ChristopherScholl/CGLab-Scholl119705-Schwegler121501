@@ -9,12 +9,14 @@ GeometryNode::GeometryNode(
   glm::fmat4 const& localTansform,
   float size,
   float speed,
-  float distance
+  float distance,
+  glm::fvec3 color
 ) :
   Node(name, parent, localTansform),
   size_(size),
   speed_(speed),
-  distance_(distance_)
+  distance_(distance),
+  color_(glm::normalize(color))
   {}
 
 // get attribute methods
@@ -30,8 +32,14 @@ float GeometryNode::getSpeed() const {
 float GeometryNode::getDistance() const {
   return distance_;
 }
+glm::fvec3 GeometryNode::getColor() const {
+  return color_;
+}
 
 // set attribute methods
 void GeometryNode::setGeometry(model const& geometry) {
   geometry_ = geometry;
+}
+void GeometryNode::setColor(glm::fvec3 const& color) {
+  color_ = color;
 }

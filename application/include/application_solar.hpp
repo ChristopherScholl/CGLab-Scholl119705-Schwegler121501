@@ -42,7 +42,7 @@ class ApplicationSolar : public Application {
   // create Scene Graph
   void initializeSolarSystem();
   // create single planet
-  void makePlanet(std::string const& name, std::shared_ptr<Node> const& parent, float distance, float size, float speed);
+  void makePlanet(std::string const& name, std::shared_ptr<Node> const& parent, float distance, float size, float speed, glm::fvec3 color);
   // create stars
   void initializeStars();
 

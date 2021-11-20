@@ -16,7 +16,8 @@ class GeometryNode : public Node {
   glm::fmat4 const& localTansform,
   float size,
   float speed,
-  float distance
+  float distance,
+  glm::fvec3 color
   );
   
   // get attribute methods
@@ -24,9 +25,11 @@ class GeometryNode : public Node {
   float getSize() const;
   float getSpeed() const;
   float getDistance() const;
+  glm::fvec3 getColor() const;
 
   // set attribute methods
   void setGeometry(model const& geometry);
+  void setColor(glm::fvec3 const& color);
  
  private:
   // attributes
@@ -34,6 +37,7 @@ class GeometryNode : public Node {
   float size_;
   float speed_;
   float distance_;
+  glm::fvec3 color_;
 };
 
 #endif

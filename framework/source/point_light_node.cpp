@@ -2,13 +2,13 @@
 
 // constructors
 PointLightNode::PointLightNode(){}
-PointLightNode::PointLightNode(float lightIntensity, color lightColor) : lightIntensity_(lightIntensity), lightColor_(lightColor){}
+PointLightNode::PointLightNode(float lightIntensity, glm::fvec3 lightColor) : lightIntensity_(lightIntensity), lightColor_(lightColor){}
   
   // get attribute methods
   float PointLightNode::getIntensity() const{
       return lightIntensity_;
   }
-  color PointLightNode::getColor() const{
+  glm::fvec3 PointLightNode::getColor() const{
       return lightColor_;
   }
 
@@ -16,6 +16,6 @@ PointLightNode::PointLightNode(float lightIntensity, color lightColor) : lightIn
   void PointLightNode::setIntensity(float lightIntensity){
       lightIntensity_ = lightIntensity;
   }
-  void PointLightNode::setColor(color lightColor){
+  void PointLightNode::setColor(glm::fvec3 lightColor){
       lightColor_ = lightColor;
   }

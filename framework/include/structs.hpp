@@ -43,10 +43,4 @@ struct shader_program {
   std::map<std::string, GLint> u_locs{};
 };
 
-// RGB color
-struct color {
-  float r_;
-  float g_;
-  float b_;
-};
 #endif
