@@ -10,7 +10,13 @@ class PointLightNode : public Node {
  public:
   // constructors
   PointLightNode();
-  PointLightNode(float lightIntensity, glm::fvec3 lightColor);
+  PointLightNode(
+  std::string const& name,
+  std::shared_ptr<Node> const& parent,
+  glm::fmat4 const& localTansform,
+  float lightIntensity,
+  glm::fvec3 lightColor
+  );
   
   // get attribute methods
   float getIntensity() const;

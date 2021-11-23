@@ -7,6 +7,7 @@
 #include "scene_graph.hpp"
 #include "geometry_node.hpp"
 #include "camera_node.hpp"
+#include "point_light_node.hpp"
 
 // gpu representation of model
 class ApplicationSolar : public Application {
@@ -41,6 +42,17 @@ class ApplicationSolar : public Application {
 
   // create Scene Graph
   void initializeSolarSystem();
+  // create single sun
+  void makeSun(
+    std::string const& name,
+    std::shared_ptr<Node> const& parent,
+    float distance,
+    float size,
+    float speed,
+    glm::fvec3 color,
+    float light_intensity,
+    glm::fvec3 light_color
+  );
   // create single planet
   void makePlanet(std::string const& name, std::shared_ptr<Node> const& parent, float distance, float size, float speed, glm::fvec3 color);
   // create stars

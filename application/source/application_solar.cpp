@@ -48,7 +48,7 @@ void ApplicationSolar::initializeSolarSystem(){
   solarSystem_ = SceneGraph("Solar System", root_node_pointer);
 
   // sun
-  makePlanet("sun", root_node_pointer, 0.5f, 0.0f, 0.0f, glm::fvec3{255, 215, 0});
+  makeSun("sun", root_node_pointer, 0.5f, 0.0f, 0.0f, glm::fvec3{255, 215, 0}, 1.0, glm::fvec3{255, 255, 255});
 
   // planets
   makePlanet("mercury", root_node_pointer, 0.09f, 0.5f, 1.0f, glm::fvec3{139, 69, 19});
@@ -71,6 +71,26 @@ void ApplicationSolar::initializeSolarSystem(){
   root_node_pointer->addChild(camera_pointer);
 
   std::cout << solarSystem_.printGraph() << std::endl;
+}
+
+void ApplicationSolar::makeSun(std::string const& name, std::shared_ptr<Node> const& parent, float size, float speed, float distance, glm::fvec3 color, float light_intensity, glm::fvec3 light_color){
+  // set up local transform matrix
+  glm::fmat4 localTransform = parent->getWorldTransform();
+  localTransform = glm::translate(localTransform, glm::fvec3{0.0f, 0.0f, distance});
+  localTransform = glm::rotate(localTransform, float(glfwGetTime()) * speed, glm::fvec3{0.0f, 1.0f, 0.0f});
+  localTransform = glm::scale(localTransform, glm::fvec3{size, size, size});
+
+  // create holder node
+  PointLightNode sun_light = PointLightNode(name + " light", parent, localTransform, light_intensity, light_color);
+  std::shared_ptr<Node> sun_light_pointer = std::make_shared<Node>(sun_light);
+  parent->addChild(sun_light_pointer);
+
+  // create geometry node
+  GeometryNode sun_geometry = GeometryNode(name + " geometry", sun_light_pointer, glm::fmat4(1), size, speed, distance, color);
+  std::shared_ptr<GeometryNode> sun_geometry_pointer = std::make_shared<GeometryNode>(sun_geometry);
+  sun_light_pointer->addChild(sun_geometry_pointer);
+
+  solarSystem_.addPlanet(sun_geometry_pointer);
 }
 
 void ApplicationSolar::makePlanet(std::string const& name, std::shared_ptr<Node> const& parent, float size, float speed, float distance, glm::fvec3 color){
@@ -135,10 +155,6 @@ void ApplicationSolar::initializeStars(){
 void ApplicationSolar::render() const {
   // render stars
   renderStars();
-
-  // render sun
-  auto sun = std::dynamic_pointer_cast<GeometryNode>(solarSystem_.getRoot()->getChild("sun holder")->getChild("sun"));
-  renderPlanet(sun);
 
   // render planets
   auto planets = solarSystem_.getPlanets();
