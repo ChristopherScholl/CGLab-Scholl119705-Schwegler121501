@@ -82,7 +82,7 @@ void ApplicationSolar::makeSun(std::string const& name, std::shared_ptr<Node> co
 
   // create holder node
   PointLightNode sun_light = PointLightNode(name + " light", parent, localTransform, light_intensity, light_color);
-  std::shared_ptr<Node> sun_light_pointer = std::make_shared<Node>(sun_light);
+  std::shared_ptr<PointLightNode> sun_light_pointer = std::make_shared<PointLightNode>(sun_light);
   parent->addChild(sun_light_pointer);
 
   // create geometry node
@@ -91,6 +91,7 @@ void ApplicationSolar::makeSun(std::string const& name, std::shared_ptr<Node> co
   sun_light_pointer->addChild(sun_geometry_pointer);
 
   solarSystem_.addPlanet(sun_geometry_pointer);
+  solarSystem_.addLightNode(sun_light_pointer);
 }
 
 void ApplicationSolar::makePlanet(std::string const& name, std::shared_ptr<Node> const& parent, float size, float speed, float distance, glm::fvec3 color){
@@ -156,6 +157,24 @@ void ApplicationSolar::render() const {
   // render stars
   renderStars();
 
+  // upload light uniforms
+  auto lightNodes = solarSystem_.getLightNodes();
+  for(auto lightNode : lightNodes){
+    // upload light intensity
+    auto temp_intensity = glGetUniformLocation(m_shaders.at("planet").handle, "light_intensity");
+    glUniform1f(temp_intensity, lightNode->getIntensity());
+
+    // upload light color
+    auto temp_color = glGetUniformLocation(m_shaders.at("planet").handle, "light_color");
+    glUniform3f(temp_color, lightNode->getColor()[0], lightNode->getColor()[1], lightNode->getColor()[2]);
+
+    // calculate position
+    glm::fvec4 light_position = lightNode->getWorldTransform() * glm::fvec4{0, 0, 0, 1};
+    // upload position
+    auto temp_position = glGetUniformLocation(m_shaders.at("planet").handle, "light_position");
+    glUniform3f(temp_intensity, light_position[0] / light_position[3], light_position[1] / light_position[3], light_position[2] / light_position[3]);
+  }
+
   // render planets
   auto planets = solarSystem_.getPlanets();
   for (auto planet : planets){
@@ -192,9 +211,9 @@ void ApplicationSolar::renderPlanet(std::shared_ptr<GeometryNode> planet)const{
                      1, GL_FALSE, glm::value_ptr(planet_normal_matrix));
 
   // set color
-  auto temp = glGetUniformLocation(m_shaders.at("planet").handle, "planet_Color");
+  auto temp_color = glGetUniformLocation(m_shaders.at("planet").handle, "planet_color");
   glm::fvec3 color = planet->getColor();
-  glUniform3f(temp, color[0], color[1], color[2]);
+  glUniform3f(temp_color, color[0], color[1], color[2]);
   
   // bind the VAO to draw
   glBindVertexArray(planet_object.vertex_AO);

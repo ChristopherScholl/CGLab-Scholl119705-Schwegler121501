@@ -4,9 +4,9 @@
 out vec4 out_Color;
 
 uniform vec3 planet_Color;
-//uniform vec3 light_position;
-//uniform vec3 light_color;
-//uniform float light_intensity;
+uniform vec3 light_position;
+uniform vec3 light_color;
+uniform float light_intensity;
 
 void main() {
   //out_Color = vec4(abs(normalize(pass_Normal)), 1.0);

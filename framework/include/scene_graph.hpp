@@ -5,6 +5,7 @@
 #include <memory>
 #include "node.hpp"
 #include "geometry_node.hpp"
+#include "point_light_node.hpp"
 
 class SceneGraph {
  public:
@@ -17,9 +18,12 @@ class SceneGraph {
   std::string getName()const;
   std::shared_ptr<Node> getRoot()const;
   std::list<std::shared_ptr<GeometryNode>> getPlanets()const;
+  std::list<std::shared_ptr<PointLightNode>> getLightNodes()const;
 
   // add planet
   void addPlanet(std::shared_ptr<GeometryNode> planet);
+  // add light node
+  void addLightNode(std::shared_ptr<PointLightNode> lightNode);
 
   // print method
   std::string printGraph()const;
@@ -36,6 +40,7 @@ class SceneGraph {
   std::string name_;
   std::shared_ptr<Node> rootNode_;
   std::list<std::shared_ptr<GeometryNode>> planets_;
+  std::list<std::shared_ptr<PointLightNode>> lightNodes_;
 };
 
 #endif
