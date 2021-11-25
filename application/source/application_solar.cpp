@@ -221,7 +221,6 @@ void ApplicationSolar::renderPlanet(std::shared_ptr<GeometryNode> planet)const{
   glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
 
   // calculate next step
-  //planetWorldTransform = glm::translate(solarSystem_.getRoot()->getWorldTransform(), glm::fvec3{0.0f, 0.0f, planet->getDistance()});
   planetWorldTransform = glm::rotate(planet->getParent()->getParent()->getWorldTransform(), float(glfwGetTime()) * planet->getSpeed(), glm::fvec3{0.0f, 1.0f, 0.0f});
   planet->getParent()->setWorldTransform(planetWorldTransform);
 }
