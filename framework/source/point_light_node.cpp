@@ -8,7 +8,11 @@ PointLightNode::PointLightNode(
     glm::fmat4 const& localTansform,
     float lightIntensity,
     glm::fvec3 lightColor
-) : Node(name, parent, localTansform), lightIntensity_(lightIntensity), lightColor_(lightColor){}
+) :
+Node(name, parent, localTansform),
+lightIntensity_(lightIntensity),
+lightColor_(glm::normalize(lightColor))
+{}
   
 // get attribute methods
 float PointLightNode::getIntensity() const{
