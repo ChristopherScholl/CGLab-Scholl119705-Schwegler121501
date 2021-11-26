@@ -33,5 +33,8 @@ void main() {// create direction vectors (pointing form the vertex to the light 
   // calculate color
   //out_color = vec4(abs(normalize(pass_Normal)), 1.0);
   //out_color = vec4(planet_color, 1.0);
-  out_color = vec4(ambient_intensity * planet_color, 1.0);
+  vec3 ambient_color = ambient_intensity * planet_color;
+  vec3 diffuse_color = max(dot(normal_vector, light_direction_vector), 0) * planet_color;
+  out_color = vec4(ambient_color + diffuse_color, 1.0);
 }
+// vec3 diffuse_color = max(dot(normal_vector, light_direction_vector), 0) * planet_color;

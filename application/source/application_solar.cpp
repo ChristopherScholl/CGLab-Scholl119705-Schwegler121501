@@ -48,7 +48,7 @@ void ApplicationSolar::initializeSolarSystem(){
   solarSystem_ = SceneGraph("Solar System", root_node_pointer);
 
   // sun
-  makeSun("sun", root_node_pointer, 0.5f, 0.0f, 0.0f, glm::fvec3{255, 215, 0}, 1.0, glm::fvec3{255, 255, 255});
+  makeSun("sun", root_node_pointer, 0.5f, 0.0f, 0.0f, glm::fvec3{2550, 2150, 0}, 1.0f, glm::fvec3{255, 255, 255});
 
   // planets
   makePlanet("mercury", root_node_pointer, 0.09f, 0.5f, 1.0f, glm::fvec3{139, 69, 19});
@@ -157,6 +157,9 @@ void ApplicationSolar::render() const {
   // render stars
   renderStars();
 
+  // bind shader to upload uniforms
+  glUseProgram(m_shaders.at("planet").handle);
+
   // upload light uniforms
   auto lightNodes = solarSystem_.getLightNodes();
   for(auto lightNode : lightNodes){
@@ -172,7 +175,7 @@ void ApplicationSolar::render() const {
     glm::fvec4 light_position = lightNode->getWorldTransform() * glm::fvec4{0, 0, 0, 1};
     // upload position
     auto temp_position = glGetUniformLocation(m_shaders.at("planet").handle, "light_position");
-    glUniform3f(temp_intensity, light_position[0] / light_position[3], light_position[1] / light_position[3], light_position[2] / light_position[3]);
+    glUniform3f(temp_position, light_position[0] / light_position[3], light_position[1] / light_position[3], light_position[2] / light_position[3]);
   }
 
   // render planets
@@ -198,9 +201,6 @@ void ApplicationSolar::renderStars()const{
 }
 
 void ApplicationSolar::renderPlanet(std::shared_ptr<GeometryNode> planet)const{
-  // bind shader to upload uniforms
-  glUseProgram(m_shaders.at("planet").handle);
-
   glm::fmat4 planetWorldTransform = planet->getParent()->getWorldTransform();
   glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ModelMatrix"),
                      1, GL_FALSE, glm::value_ptr(planetWorldTransform));
