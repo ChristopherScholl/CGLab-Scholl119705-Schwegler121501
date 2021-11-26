@@ -14,9 +14,10 @@ uniform vec3 planet_color;
 uniform vec3 light_position;
 uniform vec3 light_color;
 uniform float light_intensity;
+uniform vec3 ambient_intensity;
 
 // constants
-vec3 ambient_intensity = vec3(0.1, 0.1, 0.1);
+//vec3 ambient_intensity = vec3(0.1, 0.1, 0.1);
 
 void main() {// create direction vectors (pointing form the vertex to the light / camera)
   vec3 light_direction_vector = (pass_ViewMatrix * vec4(light_position, 1.0)).xyz - pass_Vertex_Position;
@@ -35,6 +36,7 @@ void main() {// create direction vectors (pointing form the vertex to the light 
   //out_color = vec4(planet_color, 1.0);
   vec3 ambient_color = ambient_intensity * planet_color * light_color;
   vec3 diffuse_color = max(dot(normal_vector, light_direction_vector), 0) * planet_color * light_intensity * light_color;
-  out_color = vec4(ambient_color + diffuse_color, 1.0);
+  vec3 specular_color = pow(max(dot(h, normal_vector), 0), 10.0) * light_color;
+  out_color = vec4(ambient_color + diffuse_color + specular_color, 1.0);
 }
 // vec3 diffuse_color = max(dot(normal_vector, light_direction_vector), 0) * planet_color;

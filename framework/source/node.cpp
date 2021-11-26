@@ -54,6 +54,9 @@ glm::fmat4 Node::getWorldTransform(){
 glm::fmat4 Node::getLocalTransform(){
     return localTransform_;
 }
+bool Node::getIsLight(){
+    return isLight_;
+}
 
 // get methods of derived class
 float Node::getSize() const{
@@ -89,6 +92,9 @@ void Node::setLocalTransform(glm::fmat4 const& localTransform){
     for(auto child : children_){
         child->setWorldTransform(worldTransform_);
     }
+}
+void Node::setIsLight(bool isLight){
+    isLight_ = isLight;
 }
 
 // get one specific child

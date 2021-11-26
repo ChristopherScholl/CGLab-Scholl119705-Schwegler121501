@@ -33,6 +33,7 @@ class Node {
   int getDepth();
   glm::fmat4 getWorldTransform();
   glm::fmat4 getLocalTransform();
+  bool getIsLight();
 
   // get methods of derived class
   virtual float getSize() const;
@@ -43,6 +44,7 @@ class Node {
   void setParent(std::shared_ptr<Node> const& parent);
   void setWorldTransform(glm::fmat4 const& worldTransform);
   void setLocalTransform(glm::fmat4 const& localTransform);
+  void setIsLight(bool isLight);
 
   // child specific methods
   std::shared_ptr<Node> getChild(std::string const& childName);
@@ -58,6 +60,7 @@ class Node {
   int depth_;
   glm::fmat4 worldTransform_;
   glm::fmat4 localTransform_;
+  bool isLight_ = false;
 };
 
 #endif

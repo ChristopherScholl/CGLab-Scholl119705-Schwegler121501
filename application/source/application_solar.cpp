@@ -48,7 +48,7 @@ void ApplicationSolar::initializeSolarSystem(){
   solarSystem_ = SceneGraph("Solar System", root_node_pointer);
 
   // sun
-  makeSun("sun", root_node_pointer, 0.5f, 0.0f, 0.0f, glm::fvec3{255, 215, 0}, 1.0f, glm::fvec3{255, 0, 255});
+  makeSun("sun", root_node_pointer, 0.5f, 0.0f, 0.0f, glm::fvec3{255, 215, 0}, 1.0f, glm::fvec3{255, 255, 150});
 
   // planets
   makePlanet("mercury", root_node_pointer, 0.09f, 0.5f, 1.0f, glm::fvec3{139, 69, 19});
@@ -214,6 +214,15 @@ void ApplicationSolar::renderPlanet(std::shared_ptr<GeometryNode> planet)const{
   auto temp_color = glGetUniformLocation(m_shaders.at("planet").handle, "planet_color");
   glm::fvec3 color = planet->getColor();
   glUniform3f(temp_color, color[0], color[1], color[2]);
+
+  // set ambient intensity
+  auto temp_ambient =  glGetUniformLocation(m_shaders.at("planet").handle, "ambient_intensity");
+
+  if(planet->getParent()->getIsLight() == true){
+    glUniform3f(temp_ambient, 1.0f, 1.0f, 1.0f);
+  }else{
+    glUniform3f(temp_ambient, 0.1f, 0.1f, 0.1f);
+  }
   
   // bind the VAO to draw
   glBindVertexArray(planet_object.vertex_AO);

@@ -12,7 +12,7 @@ PointLightNode::PointLightNode(
 Node(name, parent, localTansform),
 lightIntensity_(lightIntensity),
 lightColor_(glm::normalize(lightColor))
-{}
+{setIsLight(true);}
   
 // get attribute methods
 float PointLightNode::getIntensity() const{
