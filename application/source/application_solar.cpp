@@ -141,11 +141,11 @@ void ApplicationSolar::initializeStars(){
 
   // first attribute (position)
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float) * 3), 0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float) * 6), 0);
 
   // second attribute (color)
   glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float) * 3), (void*) (sizeof(float)*3));
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float) * 6), (void*) (sizeof(float)*3));
 
   // store type of primitive to draw
   star_object.draw_mode = GL_POINTS;

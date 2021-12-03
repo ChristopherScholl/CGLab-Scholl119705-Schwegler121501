@@ -20,13 +20,13 @@ uniform vec3 ambient_intensity;
 //vec3 ambient_intensity = vec3(0.1, 0.1, 0.1);
 
 void main() {// create direction vectors (pointing form the vertex to the light / camera)
-  vec3 light_direction_vector = (pass_ViewMatrix * vec4(light_position, 1.0)).xyz - pass_Vertex_Position;
-  vec3 camera_direction_vector = (pass_ViewMatrix * vec4(pass_Camera_Position, 1.0)).xyz - pass_Vertex_Position;
+  vec3 light_direction_vector = normalize((pass_ViewMatrix * vec4(light_position, 1.0) - gl_FragCoord).xyz);
+  vec3 camera_direction_vector = normalize((pass_ViewMatrix * vec4(pass_Camera_Position, 1.0) - gl_FragCoord).xyz);
 
   // normalize vectors
   vec3 normal_vector = normalize(pass_Normal);
-  light_direction_vector = normalize(light_direction_vector);
-  camera_direction_vector = normalize(camera_direction_vector);
+  //light_direction_vector = normalize(light_direction_vector);
+  //camera_direction_vector = normalize(camera_direction_vector);
 
   // light - camera vector
   vec3 h = normalize(light_direction_vector + camera_direction_vector);
@@ -36,7 +36,7 @@ void main() {// create direction vectors (pointing form the vertex to the light 
   //out_color = vec4(planet_color, 1.0);
   vec3 ambient_color = ambient_intensity * planet_color * light_color;
   vec3 diffuse_color = max(dot(normal_vector, light_direction_vector), 0) * planet_color * light_intensity * light_color;
-  vec3 specular_color = pow(max(dot(h, normal_vector), 0), 10.0) * light_color;
+  vec3 specular_color = pow(max(dot(h, normal_vector), 0), 16.0) * light_color;
   out_color = vec4(ambient_color + diffuse_color + specular_color, 1.0);
 }
 // vec3 diffuse_color = max(dot(normal_vector, light_direction_vector), 0) * planet_color;
