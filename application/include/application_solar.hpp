@@ -51,10 +51,11 @@ class ApplicationSolar : public Application {
     float speed,
     glm::fvec3 color,
     float light_intensity,
-    glm::fvec3 light_color
+    glm::fvec3 light_color,
+    std::string texture
   );
   // create single planet
-  void makePlanet(std::string const& name, std::shared_ptr<Node> const& parent, float distance, float size, float speed, glm::fvec3 color);
+  void makePlanet(std::string const& name, std::shared_ptr<Node> const& parent, float distance, float size, float speed, glm::fvec3 color, std::string texture);
   // create stars
   void initializeStars();
 
