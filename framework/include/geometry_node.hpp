@@ -17,7 +17,8 @@ class GeometryNode : public Node {
   float size,
   float speed,
   float distance,
-  glm::fvec3 color
+  glm::fvec3 color,
+  std::string texture
   );
   
   // get attribute methods
@@ -26,6 +27,7 @@ class GeometryNode : public Node {
   float getSpeed() const;
   float getDistance() const;
   glm::fvec3 getColor() const;
+  std::string getTexture() const;
 
   // set attribute methods
   void setGeometry(model const& geometry);
@@ -38,6 +40,7 @@ class GeometryNode : public Node {
   float speed_;
   float distance_;
   glm::fvec3 color_;
+  std::string texture_;
 };
 
 #endif
