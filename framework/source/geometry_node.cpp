@@ -11,14 +11,16 @@ GeometryNode::GeometryNode(
   float speed,
   float distance,
   glm::fvec3 color,
-  std::string texture
+  std::string texture,
+  int index
 ) :
   Node(name, parent, localTansform),
   size_(size),
   speed_(speed),
   distance_(distance),
   color_(glm::normalize(color)),
-  texture_(texture)
+  texture_(texture),
+  index_(index)
   {}
 
 // get attribute methods
@@ -40,6 +42,13 @@ glm::fvec3 GeometryNode::getColor() const {
 std::string GeometryNode::getTexture() const {
   return texture_;
 }
+texture_object GeometryNode::getTextureObject() const {
+  return texture_object_;
+}
+int GeometryNode::getIndex() const {
+  return index_;
+}
+
 
 // set attribute methods
 void GeometryNode::setGeometry(model const& geometry) {
@@ -47,4 +56,7 @@ void GeometryNode::setGeometry(model const& geometry) {
 }
 void GeometryNode::setColor(glm::fvec3 const& color) {
   color_ = color;
+}
+void GeometryNode::setTextureObject(texture_object texture_object){
+  texture_object_ = texture_object;
 }

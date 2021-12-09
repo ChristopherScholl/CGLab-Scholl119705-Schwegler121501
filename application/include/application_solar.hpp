@@ -8,6 +8,7 @@
 #include "geometry_node.hpp"
 #include "camera_node.hpp"
 #include "point_light_node.hpp"
+#include "texture_loader.hpp"
 
 // gpu representation of model
 class ApplicationSolar : public Application {
@@ -52,10 +53,13 @@ class ApplicationSolar : public Application {
     glm::fvec3 color,
     float light_intensity,
     glm::fvec3 light_color,
-    std::string texture
+    std::string texture,
+    int index
   );
   // create single planet
-  void makePlanet(std::string const& name, std::shared_ptr<Node> const& parent, float distance, float size, float speed, glm::fvec3 color, std::string texture);
+  void makePlanet(std::string const& name, std::shared_ptr<Node> const& parent, float distance, float size, float speed, glm::fvec3 color, std::string texture, int index);
+  // initialize texture of single planet / sun
+  void makeTexture(std::shared_ptr<GeometryNode> const& object);
   // create stars
   void initializeStars();
 

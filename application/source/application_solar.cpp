@@ -48,22 +48,22 @@ void ApplicationSolar::initializeSolarSystem(){
   solarSystem_ = SceneGraph("Solar System", root_node_pointer);
 
   // sun
-  makeSun("sun", root_node_pointer, 0.5f, 0.0f, 0.0f, glm::fvec3{255, 215, 0}, 1.0f, glm::fvec3{255, 255, 150});
+  makeSun("sun", root_node_pointer, 0.5f, 0.0f, 0.0f, glm::fvec3{255, 215, 0}, 1.0f, glm::fvec3{255, 255, 150}, "sunmap.png", 0);
 
   // planets
-  makePlanet("mercury", root_node_pointer, 0.09f, 0.5f, 1.0f, glm::fvec3{139, 69, 19});
-  makePlanet("venus", root_node_pointer, 0.2f, 0.4f, 1.5f, glm::fvec3{245, 222, 179});
-  makePlanet("earth", root_node_pointer, 0.2f, 0.3f, 2.5f, glm::fvec3{34, 139, 34});
-  makePlanet("mars", root_node_pointer, 0.1f, 0.2f, 3.5f, glm::fvec3{255, 0, 0});
-  makePlanet("jupiter", root_node_pointer, 0.4f, 0.09f, 5.0f, glm::fvec3{255, 140, 0});
-  makePlanet("saturn", root_node_pointer, 0.4f, 0.10f, 7.0f, glm::fvec3{255, 165, 0});
-  makePlanet("uranus", root_node_pointer, 0.3f, 0.05f, 9.0f, glm::fvec3{65, 105, 225});
-  makePlanet("neptune", root_node_pointer, 0.3f, 0.04f, 10.0f, glm::fvec3{0, 0, 139});
-  makePlanet("pluto", root_node_pointer, 0.04f, 0.06f, 10.5f, glm::fvec3{255, 255, 255});
+  makePlanet("mercury", root_node_pointer, 0.09f, 0.5f, 1.0f, glm::fvec3{139, 69, 19}, "mercurymap.png", 1);
+  makePlanet("venus", root_node_pointer, 0.2f, 0.4f, 1.5f, glm::fvec3{245, 222, 179}, "venusmap.png", 2);
+  makePlanet("earth", root_node_pointer, 0.2f, 0.3f, 2.5f, glm::fvec3{34, 139, 34}, "earthmap1k.png", 3);
+  makePlanet("mars", root_node_pointer, 0.1f, 0.2f, 3.5f, glm::fvec3{255, 0, 0}, "mars_1k_color.png", 4);
+  makePlanet("jupiter", root_node_pointer, 0.4f, 0.09f, 5.0f, glm::fvec3{255, 140, 0}, "jupitermap.png", 5);
+  makePlanet("saturn", root_node_pointer, 0.4f, 0.10f, 7.0f, glm::fvec3{255, 165, 0}, "saturnmap.png", 6);
+  makePlanet("uranus", root_node_pointer, 0.3f, 0.05f, 9.0f, glm::fvec3{65, 105, 225}, "uranusmap.png", 7);
+  makePlanet("neptune", root_node_pointer, 0.3f, 0.04f, 10.0f, glm::fvec3{0, 0, 139}, "neptunemap.png", 8);
+  makePlanet("pluto", root_node_pointer, 0.04f, 0.06f, 10.5f, glm::fvec3{255, 255, 255}, "plutomap1k.png", 9);
   
   // moons
   std::shared_ptr<Node> earth_holder_pointer = root_node_pointer->getChild("earth holder");
-  makePlanet("moon", earth_holder_pointer, 1.0f, 1.3f, 0.6f, glm::fvec3{128, 128, 128});
+  makePlanet("moon", earth_holder_pointer, 1.0f, 1.3f, 0.6f, glm::fvec3{128, 128, 128}, "moonmap1k.png", 31);
 
   // camera
   CameraNode camera = CameraNode("camera", root_node_pointer, glm::fmat4(1));
@@ -73,7 +73,7 @@ void ApplicationSolar::initializeSolarSystem(){
   std::cout << solarSystem_.printGraph() << std::endl;
 }
 
-void ApplicationSolar::makeSun(std::string const& name, std::shared_ptr<Node> const& parent, float size, float speed, float distance, glm::fvec3 color, float light_intensity, glm::fvec3 light_color){
+void ApplicationSolar::makeSun(std::string const& name, std::shared_ptr<Node> const& parent, float size, float speed, float distance, glm::fvec3 color, float light_intensity, glm::fvec3 light_color, std::string texture, int index){
   // set up local transform matrix
   glm::fmat4 localTransform = parent->getWorldTransform();
   localTransform = glm::translate(localTransform, glm::fvec3{0.0f, 0.0f, distance});
@@ -86,15 +86,17 @@ void ApplicationSolar::makeSun(std::string const& name, std::shared_ptr<Node> co
   parent->addChild(sun_light_pointer);
 
   // create geometry node
-  GeometryNode sun_geometry = GeometryNode(name + " geometry", sun_light_pointer, glm::fmat4(1), size, speed, distance, color);
+  GeometryNode sun_geometry = GeometryNode(name + " geometry", sun_light_pointer, glm::fmat4(1), size, speed, distance, color, texture, index);
   std::shared_ptr<GeometryNode> sun_geometry_pointer = std::make_shared<GeometryNode>(sun_geometry);
   sun_light_pointer->addChild(sun_geometry_pointer);
 
   solarSystem_.addPlanet(sun_geometry_pointer);
   solarSystem_.addLightNode(sun_light_pointer);
+
+  makeTexture(sun_geometry_pointer);
 }
 
-void ApplicationSolar::makePlanet(std::string const& name, std::shared_ptr<Node> const& parent, float size, float speed, float distance, glm::fvec3 color){
+void ApplicationSolar::makePlanet(std::string const& name, std::shared_ptr<Node> const& parent, float size, float speed, float distance, glm::fvec3 color, std::string texture, int index){
   // set up local transform matrix
   glm::fmat4 localTransform = parent->getWorldTransform();
   localTransform = glm::translate(localTransform, glm::fvec3{0.0f, 0.0f, distance});
@@ -107,11 +109,39 @@ void ApplicationSolar::makePlanet(std::string const& name, std::shared_ptr<Node>
   parent->addChild(planet_holder_pointer);
 
   // create geometry node
-  GeometryNode planet = GeometryNode(name, planet_holder_pointer, glm::fmat4(1), size, speed, distance, color);
+  GeometryNode planet = GeometryNode(name, planet_holder_pointer, glm::fmat4(1), size, speed, distance, color, texture, index);
   std::shared_ptr<GeometryNode> planet_pointer = std::make_shared<GeometryNode>(planet);
   planet_holder_pointer->addChild(planet_pointer);
 
   solarSystem_.addPlanet(planet_pointer);
+
+  makeTexture(planet_pointer);
+}
+
+void ApplicationSolar::makeTexture(std::shared_ptr<GeometryNode> const& object){
+  // load texture
+  pixel_data planetTexture = texture_loader::file(m_resource_path + "textures/" + object->getTexture());
+
+  // select active texture unit
+  glActiveTexture(GL_TEXTURE0 + object->getIndex());
+
+  // create texture object
+  texture_object t;
+  t.target = GL_TEXTURE_2D;
+  // generate texture names
+  glGenTextures(1, &t.handle);
+  glBindTexture(t.target, t.handle);
+  object->setTextureObject(t);
+
+  // define texture sampling parameters
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  // define texture data and format
+  glTexImage2D(GL_TEXTURE_2D, 0, planetTexture.channels, planetTexture.width, planetTexture.height, 0, planetTexture.channels, planetTexture.channel_type, planetTexture.ptr());
 }
 
 void ApplicationSolar::initializeStars(){
@@ -267,7 +297,7 @@ void ApplicationSolar::uploadUniforms() {
 // load shader sources
 void ApplicationSolar::initializeShaderPrograms() {
   // store shader program objects in container
-  m_shaders.emplace("planet", shader_program{{{GL_VERTEX_SHADER,m_resource_path + "shaders/simple.vert"},
+  m_shaders.emplace("planet", shader_program{{{GL_VERTEX_SHADER, m_resource_path + "shaders/simple.vert"},
                                            {GL_FRAGMENT_SHADER, m_resource_path + "shaders/simple.frag"}}});
   // request uniform locations for shader program
   m_shaders.at("planet").u_locs["NormalMatrix"] = -1;
@@ -276,7 +306,7 @@ void ApplicationSolar::initializeShaderPrograms() {
   m_shaders.at("planet").u_locs["ProjectionMatrix"] = -1;
 
   // store shader program objects in container
-  m_shaders.emplace("star", shader_program{{{GL_VERTEX_SHADER,m_resource_path + "shaders/vao.vert"},
+  m_shaders.emplace("star", shader_program{{{GL_VERTEX_SHADER, m_resource_path + "shaders/vao.vert"},
                                            {GL_FRAGMENT_SHADER, m_resource_path + "shaders/vao.frag"}}});
   m_shaders.at("star").u_locs["ModelMatrix"] = -1;
   m_shaders.at("star").u_locs["ViewMatrix"] = -1;
