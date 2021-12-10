@@ -4,6 +4,7 @@
 in vec3 pass_Normal;
 in vec3 pass_Vertex_Position;
 in vec3 pass_Camera_Position;
+in vec2 pass_TexCoord;
 in mat4 pass_ViewMatrix;
 
 // outout: color of position
@@ -15,6 +16,7 @@ uniform vec3 light_position;
 uniform vec3 light_color;
 uniform float light_intensity;
 uniform vec3 ambient_intensity;
+uniform sampler2D planet_texture;
 
 void main() {
   vec3 normal_vector = normalize(pass_Normal);
@@ -26,11 +28,22 @@ void main() {
   // light - camera vector
   vec3 h = normalize(light_direction_vector + camera_direction_vector);
 
-  // calculate color
+  // calculate color rainbow
   //out_color = vec4(abs(normalize(pass_Normal)), 1.0);
+
+  // calculate color simple
   //out_color = vec4(planet_color, 1.0);
-  vec3 ambient_color = ambient_intensity * planet_color * light_color;
-  vec3 diffuse_color = max(dot(normal_vector, light_direction_vector), 0) * planet_color * light_intensity * light_color;
+
+  // calculate color diffuse & specular
+  //vec3 ambient_color = ambient_intensity * planet_color * light_color;
+  //vec3 diffuse_color = max(dot(normal_vector, light_direction_vector), 0) * planet_color * light_intensity * light_color;
+  //vec3 specular_color = pow(max(dot(h, normal_vector), 0), 16.0) * light_color;
+  //out_color = vec4(ambient_color + diffuse_color + specular_color, 1.0);
+
+  // calculate color current
+  vec4 texture_color = texture(planet_texture, pass_TexCoord);
+  vec3 ambient_color = ambient_intensity * texture_color.rgb * light_color;
+  vec3 diffuse_color = max(dot(normal_vector, light_direction_vector), 0) * texture_color.rgb * light_intensity * light_color;
   vec3 specular_color = pow(max(dot(h, normal_vector), 0), 16.0) * light_color;
   out_color = vec4(ambient_color + diffuse_color + specular_color, 1.0);
 }

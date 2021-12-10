@@ -253,6 +253,16 @@ void ApplicationSolar::renderPlanet(std::shared_ptr<GeometryNode> planet)const{
   }else{
     glUniform3f(temp_ambient, 0.1f, 0.1f, 0.1f);
   }
+
+  // access texture
+  glActiveTexture(GL_TEXTURE0 + planet->getIndex());
+  texture_object textureObject = planet->getTextureObject();
+  glBindTexture(textureObject.target, textureObject.handle);
+
+  // upload texture to shader
+  auto temp_texture = glGetUniformLocation(m_shaders.at("planet").handle, "planet_texture");
+  glUseProgram(m_shaders.at("planet").handle);
+  glUniform1i(temp_texture, textureObject.handle);
   
   // bind the VAO to draw
   glBindVertexArray(planet_object.vertex_AO);
@@ -337,6 +347,10 @@ void ApplicationSolar::initializeGeometry() {
   glEnableVertexAttribArray(1);
   // second attribute is 3 floats with no offset & stride
   glVertexAttribPointer(1, model::NORMAL.components, model::NORMAL.type, GL_FALSE, planet_model.vertex_bytes, planet_model.offsets[model::NORMAL]);
+  // activate third attribute on gpu
+  glEnableVertexAttribArray(2);
+  // second attribute is 2 floats with no offset & stride
+  glVertexAttribPointer(2, model::TEXCOORD.components, model::TEXCOORD.type, GL_FALSE, planet_model.vertex_bytes, planet_model.offsets[model::TEXCOORD]);
 
    // generate generic buffer
   glGenBuffers(1, &planet_object.element_BO);
