@@ -63,7 +63,7 @@ void ApplicationSolar::initializeSolarSystem(){
   
   // moons
   std::shared_ptr<Node> earth_holder_pointer = root_node_pointer->getChild("earth holder");
-  makePlanet("moon", earth_holder_pointer, 1.0f, 1.3f, 0.6f, glm::fvec3{128, 128, 128}, "moonmap1k.png", 31);
+  makePlanet("moon", earth_holder_pointer, 1.0f, 1.3f, 0.6f, glm::fvec3{128, 128, 128}, "moonmap1k.png", 10);
 
   // camera
   CameraNode camera = CameraNode("camera", root_node_pointer, glm::fmat4(1));
@@ -249,9 +249,9 @@ void ApplicationSolar::renderPlanet(std::shared_ptr<GeometryNode> planet)const{
   auto temp_ambient =  glGetUniformLocation(m_shaders.at("planet").handle, "ambient_intensity");
 
   if(planet->getParent()->getIsLight() == true){
-    glUniform3f(temp_ambient, 1.0f, 1.0f, 1.0f);
+    glUniform3f(temp_ambient, 2.0f, 2.0f, 2.0f);
   }else{
-    glUniform3f(temp_ambient, 0.1f, 0.1f, 0.1f);
+    glUniform3f(temp_ambient, 0.4f, 0.4f, 0.4f);
   }
 
   // access texture
