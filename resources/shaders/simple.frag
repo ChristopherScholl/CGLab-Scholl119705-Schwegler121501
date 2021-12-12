@@ -46,4 +46,5 @@ void main() {
   vec3 diffuse_color = max(dot(normal_vector, light_direction_vector), 0) * texture_color.rgb * light_intensity * light_color;
   vec3 specular_color = pow(max(dot(h, normal_vector), 0), 16.0) * light_color;
   out_color = vec4(ambient_color + diffuse_color + specular_color, 1.0);
+  //out_color = vec4(pass_TexCoord, 1, 1);
 }

@@ -48,7 +48,7 @@ void ApplicationSolar::initializeSolarSystem(){
   solarSystem_ = SceneGraph("Solar System", root_node_pointer);
 
   // sun
-  makeSun("sun", root_node_pointer, 0.5f, 0.0f, 0.0f, glm::fvec3{255, 215, 0}, 1.0f, glm::fvec3{255, 255, 150}, "sunmap.png", 0);
+  
 
   // planets
   makePlanet("mercury", root_node_pointer, 0.09f, 0.5f, 1.0f, glm::fvec3{139, 69, 19}, "mercurymap.png", 1);
@@ -64,6 +64,8 @@ void ApplicationSolar::initializeSolarSystem(){
   // moons
   std::shared_ptr<Node> earth_holder_pointer = root_node_pointer->getChild("earth holder");
   makePlanet("moon", earth_holder_pointer, 1.0f, 1.3f, 0.6f, glm::fvec3{128, 128, 128}, "moonmap1k.png", 10);
+
+  makeSun("sun", root_node_pointer, 0.5f, 0.0f, 0.0f, glm::fvec3{255, 215, 0}, 1.0f, glm::fvec3{255, 255, 150}, "sunmap.png", 11);
 
   // camera
   CameraNode camera = CameraNode("camera", root_node_pointer, glm::fmat4(1));
@@ -131,6 +133,9 @@ void ApplicationSolar::makeTexture(std::shared_ptr<GeometryNode> const& object){
   // generate texture names
   glGenTextures(1, &t.handle);
   glBindTexture(t.target, t.handle);
+  std::cout << object->getName() << std::endl;
+  std::cout << t.target << std::endl;
+  std::cout << t.handle << std::endl;
   object->setTextureObject(t);
 
   // define texture sampling parameters
@@ -325,7 +330,7 @@ void ApplicationSolar::initializeShaderPrograms() {
 
 // load models
 void ApplicationSolar::initializeGeometry() {
-  model planet_model = model_loader::obj(m_resource_path + "models/sphere.obj", model::NORMAL);
+  model planet_model = model_loader::obj(m_resource_path + "models/sphere.obj", model::NORMAL | model::TEXCOORD);
 
   // generate vertex array object
   glGenVertexArrays(1, &planet_object.vertex_AO);
