@@ -63,9 +63,19 @@ class ApplicationSolar : public Application {
   // create stars
   void initializeStars();
 
+  // create and render framebuffer & full-screen quad
+  void initilizeFramebuffer(int width, int height);
+  void initializeFullScreenQuad();
+  void renderFullScreenQuad();
+
   // cpu representation of model
   model_object planet_object;
   model_object star_object;
+
+  // framebuffer
+  framebuffer_object framebuffer;
+  // full-screen quad
+  model_object full_screen_quad;
   
   // camera transform matrix
   glm::fmat4 m_view_transform;

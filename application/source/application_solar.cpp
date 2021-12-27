@@ -31,6 +31,7 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
   initializeShaderPrograms();
   initializeSolarSystem();
   initializeStars();
+  initilizeFramebuffer(initial_resolution.x, initial_resolution.y);
 }
 
 ApplicationSolar::~ApplicationSolar() {
@@ -48,7 +49,7 @@ void ApplicationSolar::initializeSolarSystem(){
   solarSystem_ = SceneGraph("Solar System", root_node_pointer);
 
   // sun
-  
+  makeSun("sun", root_node_pointer, 0.5f, 0.0f, 0.0f, glm::fvec3{255, 215, 0}, 1.0f, glm::fvec3{255, 255, 150}, "sunmap.png", 11);
 
   // planets
   makePlanet("mercury", root_node_pointer, 0.09f, 0.5f, 1.0f, glm::fvec3{139, 69, 19}, "mercurymap.png", 1);
@@ -64,8 +65,6 @@ void ApplicationSolar::initializeSolarSystem(){
   // moons
   std::shared_ptr<Node> earth_holder_pointer = root_node_pointer->getChild("earth holder");
   makePlanet("moon", earth_holder_pointer, 1.0f, 1.3f, 0.6f, glm::fvec3{128, 128, 128}, "moonmap1k.png", 10);
-
-  makeSun("sun", root_node_pointer, 0.5f, 0.0f, 0.0f, glm::fvec3{255, 215, 0}, 1.0f, glm::fvec3{255, 255, 150}, "sunmap.png", 11);
 
   // camera
   CameraNode camera = CameraNode("camera", root_node_pointer, glm::fmat4(1));
@@ -133,9 +132,6 @@ void ApplicationSolar::makeTexture(std::shared_ptr<GeometryNode> const& object){
   // generate texture names
   glGenTextures(1, &t.handle);
   glBindTexture(t.target, t.handle);
-  std::cout << object->getName() << std::endl;
-  std::cout << t.target << std::endl;
-  std::cout << t.handle << std::endl;
   object->setTextureObject(t);
 
   // define texture sampling parameters
@@ -186,6 +182,35 @@ void ApplicationSolar::initializeStars(){
   star_object.draw_mode = GL_POINTS;
   // transfer number of indices to model object 
   star_object.num_elements = GLsizei(number_stars);
+}
+
+void ApplicationSolar::initilizeFramebuffer(int width, int height){
+  // create framebuffer object
+  glGenFramebuffers(1, &framebuffer.handle);
+  glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.handle);
+  
+  // create color attachment as texture object
+  texture_object color_buffer;
+  glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, color_buffer.handle, 0);
+  framebuffer.color_buffer = color_buffer;
+  
+  // create depth attachment as renderbuffer
+  glGenRenderbuffers(1, &framebuffer.depth_handle);
+  glBindRenderbuffer(GL_RENDERBUFFER, framebuffer.depth_handle);
+  // ERROR? - GL_DEBUG_SEVERITY_LOW - GL_DEBUG_TYPE_OTHER: Framebuffer detailed info: The driver allocated storage for renderbuffer 1.
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, GLsizei(width), GLsizei(height));
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, framebuffer.depth_handle);
+  
+  // define which buffers to write
+  GLenum draw_buffers[1] = {GL_COLOR_ATTACHMENT0};
+  glDrawBuffers(1, draw_buffers);
+  
+  // check whether the framebuffer can be written
+  if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE){
+    std::cout << "Oh no! Framebuffer died." << std::endl;
+  }else{
+    std::cout << "Good newz! Framebuffer lives." << std::endl;
+  }
 }
 
 void ApplicationSolar::render() const {

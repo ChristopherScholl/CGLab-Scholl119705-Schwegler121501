@@ -28,6 +28,16 @@ struct texture_object {
   GLenum target = GL_NONE;
 };
 
+// framebuffer
+struct framebuffer_object {
+  // handle of texture object
+  GLuint handle = 0;
+  // color attachment
+  texture_object color_buffer;
+  // depth attachment
+  GLuint depth_handle;
+};
+
 // shader handle and uniform storage
 struct shader_program {
   shader_program(std::map<GLenum, std::string> paths)
