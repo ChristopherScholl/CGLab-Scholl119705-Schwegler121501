@@ -66,7 +66,7 @@ class ApplicationSolar : public Application {
   // create and render framebuffer & full-screen quad
   void initilizeFramebuffer(int width, int height);
   void initializeFullScreenQuad();
-  void renderFullScreenQuad();
+  void renderPostProcessing()const;
 
   // cpu representation of model
   model_object planet_object;

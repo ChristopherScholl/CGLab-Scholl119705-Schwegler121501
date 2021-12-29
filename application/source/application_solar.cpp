@@ -213,7 +213,51 @@ void ApplicationSolar::initilizeFramebuffer(int width, int height){
   }
 }
 
+void ApplicationSolar::initializeFullScreenQuad(){
+  // triangles
+  std::vector<GLfloat> triangles = {
+    // v1
+    -1.0, -1.0, 0.0, 1.0,
+    // v2
+    1.0, -1.0, 0.0, 1.0,
+    // v3
+    1.0, 1.0, 0.0, 1.0,
+    // v4
+    -1.0, 1.0, 0.0, 1.0
+  };
+
+  // generate vertex array object
+  glGenVertexArrays(1, &full_screen_quad.vertex_AO);
+  // bind the array for attaching buffers
+  glBindVertexArray(full_screen_quad.vertex_AO);
+
+  // generate generic buffer
+  glGenBuffers(1, &full_screen_quad.vertex_BO);
+  // bind this as an vertex array buffer containing all attributes
+  glBindBuffer(GL_ARRAY_BUFFER, full_screen_quad.vertex_BO);
+  // configure currently bound array buffer
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * triangles.size(), triangles.data(), GL_STATIC_DRAW);
+
+  // first attribute (position)
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float) * 4), 0);
+
+  // second attribute (color)
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float) * 6), (void*) (sizeof(float)*3));
+
+  // store type of primitive to draw
+  full_screen_quad.draw_mode = GL_TRIANGLE_STRIP;
+  // transfer number of indices to model object 
+  full_screen_quad.num_elements = GLsizei(triangles.size() / 4);
+}
+
 void ApplicationSolar::render() const {
+  glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.handle);
+  //glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  //glEnable(GL_DEPTH_TEST);
+
   // render stars
   renderStars();
 
@@ -243,6 +287,32 @@ void ApplicationSolar::render() const {
   for (auto planet : planets){
     renderPlanet(planet);
   }
+
+  renderPostProcessing();
+}
+
+void ApplicationSolar::renderPostProcessing()const{
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  //glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+  //glEnable(GL_DEPTH_TEST);
+
+  // full-screen quad
+  glUseProgram(m_shaders.at("fullScreenQuad").handle);
+
+  // extract texture from framebuffer
+  glActiveTexture(GL_TEXTURE0);
+  // Warum GL_TEXTURE_2D und nicht framebuffer.color_buffer.target?
+  glBindTexture(GL_TEXTURE_2D, framebuffer.color_buffer.handle);
+
+  // upload texture to shader
+  auto temp_texture = glGetUniformLocation(m_shaders.at("fullScreenQuad").handle, "fullScreenQuad_texture");
+  // Warum 0 und nicht framebuffer.color_buffer.handle?
+  glUniform1i(temp_texture, 0);
+
+  // render quad
+  glBindVertexArray(full_screen_quad.vertex_AO);
+  glDrawArrays(full_screen_quad.draw_mode, 0, full_screen_quad.num_elements);
 }
 
 void ApplicationSolar::renderStars()const{
@@ -348,9 +418,14 @@ void ApplicationSolar::initializeShaderPrograms() {
   // store shader program objects in container
   m_shaders.emplace("star", shader_program{{{GL_VERTEX_SHADER, m_resource_path + "shaders/vao.vert"},
                                            {GL_FRAGMENT_SHADER, m_resource_path + "shaders/vao.frag"}}});
+  // request uniform locations for shader program
   m_shaders.at("star").u_locs["ModelMatrix"] = -1;
   m_shaders.at("star").u_locs["ViewMatrix"] = -1;
   m_shaders.at("star").u_locs["ProjectionMatrix"] = -1;
+
+  //  store shader program objects in container
+  m_shaders.emplace("fullScreenQuad", shader_program{{{GL_VERTEX_SHADER, m_resource_path + "shaders/post-processing.vert"},
+                                           {GL_FRAGMENT_SHADER, m_resource_path + "shaders/post-processing.frag"}}});
 }
 
 // load models
