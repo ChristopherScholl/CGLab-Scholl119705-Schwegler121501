@@ -32,6 +32,7 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
   initializeSolarSystem();
   initializeStars();
   initilizeFramebuffer(initial_resolution.x, initial_resolution.y);
+  initializeFullScreenQuad();
 }
 
 ApplicationSolar::~ApplicationSolar() {
@@ -217,13 +218,13 @@ void ApplicationSolar::initializeFullScreenQuad(){
   // triangles
   std::vector<GLfloat> triangles = {
     // v1
-    -1.0, -1.0, 0.0, 1.0,
+    -1.0, -1.0, 0.0, 0.0, 0.0,
     // v2
-    1.0, -1.0, 0.0, 1.0,
+    1.0, -1.0, 0.0, 1.0, 0.0,
     // v3
-    1.0, 1.0, 0.0, 1.0,
+    1.0, 1.0, 0.0, 1.0, 1.0,
     // v4
-    -1.0, 1.0, 0.0, 1.0
+    -1.0, 1.0, 0.0, 0.0, 1.0
   };
 
   // generate vertex array object
@@ -240,23 +241,28 @@ void ApplicationSolar::initializeFullScreenQuad(){
 
   // first attribute (position)
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float) * 4), 0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float) * 6), 0);
 
-  // second attribute (color)
+  // second attribute (uv)
   glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float) * 6), (void*) (sizeof(float)*3));
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float) * 4), (void*) (sizeof(float)*2));
 
   // store type of primitive to draw
   full_screen_quad.draw_mode = GL_TRIANGLE_STRIP;
+  std::cout << full_screen_quad.draw_mode << std::endl;
   // transfer number of indices to model object 
-  full_screen_quad.num_elements = GLsizei(triangles.size() / 4);
+  full_screen_quad.num_elements = GLsizei(triangles.size() / 5);
+  std::cout << full_screen_quad.num_elements << std::endl;
 }
 
 void ApplicationSolar::render() const {
+  std::cout << "render()" << std::endl;
   glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.handle);
-  //glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+  glClearColor(1.0f, 0.1f, 0.1f, 1.0f);
+  std::cout << "!!!" << std::endl;
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  //glEnable(GL_DEPTH_TEST);
+  std::cout << "!!!" << std::endl;
+  glEnable(GL_DEPTH_TEST);
 
   // render stars
   renderStars();
@@ -293,26 +299,33 @@ void ApplicationSolar::render() const {
 
 void ApplicationSolar::renderPostProcessing()const{
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  //glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
-  //glEnable(GL_DEPTH_TEST);
+  glEnable(GL_DEPTH_TEST);
 
   // full-screen quad
   glUseProgram(m_shaders.at("fullScreenQuad").handle);
 
+  std::cout << "Why" << std::endl;
   // extract texture from framebuffer
-  glActiveTexture(GL_TEXTURE0);
+  glActiveTexture(GL_TEXTURE0 + 15);
+  std::cout << "is" << std::endl;
   // Warum GL_TEXTURE_2D und nicht framebuffer.color_buffer.target?
   glBindTexture(GL_TEXTURE_2D, framebuffer.color_buffer.handle);
 
+  std::cout << "this" << std::endl;
   // upload texture to shader
   auto temp_texture = glGetUniformLocation(m_shaders.at("fullScreenQuad").handle, "fullScreenQuad_texture");
+  std::cout << "still" << std::endl;
   // Warum 0 und nicht framebuffer.color_buffer.handle?
-  glUniform1i(temp_texture, 0);
+  glUniform1i(temp_texture, framebuffer.color_buffer.handle);
 
   // render quad
+  std::cout << "happening" << std::endl;
   glBindVertexArray(full_screen_quad.vertex_AO);
+  std::cout << "?" << std::endl;
   glDrawArrays(full_screen_quad.draw_mode, 0, full_screen_quad.num_elements);
+  std::cout << ":(" << std::endl;
 }
 
 void ApplicationSolar::renderStars()const{
