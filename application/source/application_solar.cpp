@@ -190,9 +190,28 @@ void ApplicationSolar::initilizeFramebuffer(int width, int height){
   glGenFramebuffers(1, &framebuffer.handle);
   glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.handle);
   
-  // create color attachment as texture object
-  texture_object color_buffer;
-  glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, color_buffer.handle, 0);
+  // select active texture unit
+  glActiveTexture(GL_TEXTURE0 + 12);
+  
+  // create texture object
+  texture_object color_buffer = texture_object{12, GL_TEXTURE_2D};
+
+  // generate texture names
+  glGenTextures(1, &color_buffer.handle);
+  glBindTexture(color_buffer.target, color_buffer.handle);
+
+  // define texture sampling parameters
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  // define texture data and format
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+
+  // set color attachment
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_buffer.handle, 0);
   framebuffer.color_buffer = color_buffer;
   
   // create depth attachment as renderbuffer
@@ -241,27 +260,22 @@ void ApplicationSolar::initializeFullScreenQuad(){
 
   // first attribute (position)
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float) * 6), 0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float) * 5), 0);
 
   // second attribute (uv)
   glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float) * 4), (void*) (sizeof(float)*2));
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float) * 5), (void*) (sizeof(float)*3));
 
   // store type of primitive to draw
   full_screen_quad.draw_mode = GL_TRIANGLE_STRIP;
-  std::cout << full_screen_quad.draw_mode << std::endl;
   // transfer number of indices to model object 
   full_screen_quad.num_elements = GLsizei(triangles.size() / 5);
-  std::cout << full_screen_quad.num_elements << std::endl;
 }
 
 void ApplicationSolar::render() const {
-  std::cout << "render()" << std::endl;
   glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.handle);
-  glClearColor(1.0f, 0.1f, 0.1f, 1.0f);
-  std::cout << "!!!" << std::endl;
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  std::cout << "!!!" << std::endl;
   glEnable(GL_DEPTH_TEST);
 
   // render stars
@@ -299,33 +313,24 @@ void ApplicationSolar::render() const {
 
 void ApplicationSolar::renderPostProcessing()const{
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+  glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
   glEnable(GL_DEPTH_TEST);
 
   // full-screen quad
   glUseProgram(m_shaders.at("fullScreenQuad").handle);
 
-  std::cout << "Why" << std::endl;
   // extract texture from framebuffer
-  glActiveTexture(GL_TEXTURE0 + 15);
-  std::cout << "is" << std::endl;
-  // Warum GL_TEXTURE_2D und nicht framebuffer.color_buffer.target?
-  glBindTexture(GL_TEXTURE_2D, framebuffer.color_buffer.handle);
+  glActiveTexture(GL_TEXTURE0 + 12);
+  glBindTexture(framebuffer.color_buffer.target, framebuffer.color_buffer.handle);
 
-  std::cout << "this" << std::endl;
   // upload texture to shader
   auto temp_texture = glGetUniformLocation(m_shaders.at("fullScreenQuad").handle, "fullScreenQuad_texture");
-  std::cout << "still" << std::endl;
-  // Warum 0 und nicht framebuffer.color_buffer.handle?
   glUniform1i(temp_texture, framebuffer.color_buffer.handle);
 
   // render quad
-  std::cout << "happening" << std::endl;
   glBindVertexArray(full_screen_quad.vertex_AO);
-  std::cout << "?" << std::endl;
   glDrawArrays(full_screen_quad.draw_mode, 0, full_screen_quad.num_elements);
-  std::cout << ":(" << std::endl;
 }
 
 void ApplicationSolar::renderStars()const{
