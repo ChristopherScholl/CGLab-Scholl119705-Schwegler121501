@@ -50,22 +50,22 @@ void ApplicationSolar::initializeSolarSystem(){
   solarSystem_ = SceneGraph("Solar System", root_node_pointer);
 
   // sun
-  makeSun("sun", root_node_pointer, 0.5f, 0.0f, 0.0f, glm::fvec3{255, 215, 0}, 1.0f, glm::fvec3{255, 255, 150}, "sunmap.png", 11);
+  makeSun("sun", root_node_pointer, 0.5f, 0.0f, 0.0f, glm::fvec3{255, 215, 0}, 1.0f, glm::fvec3{255, 255, 150}, "sunmap.png", 1);
 
   // planets
-  makePlanet("mercury", root_node_pointer, 0.09f, 0.5f, 1.0f, glm::fvec3{139, 69, 19}, "mercurymap.png", 1);
-  makePlanet("venus", root_node_pointer, 0.2f, 0.4f, 1.5f, glm::fvec3{245, 222, 179}, "venusmap.png", 2);
-  makePlanet("earth", root_node_pointer, 0.2f, 0.3f, 2.5f, glm::fvec3{34, 139, 34}, "earthmap1k.png", 3);
-  makePlanet("mars", root_node_pointer, 0.1f, 0.2f, 3.5f, glm::fvec3{255, 0, 0}, "mars_1k_color.png", 4);
-  makePlanet("jupiter", root_node_pointer, 0.4f, 0.09f, 5.0f, glm::fvec3{255, 140, 0}, "jupitermap.png", 5);
-  makePlanet("saturn", root_node_pointer, 0.4f, 0.10f, 7.0f, glm::fvec3{255, 165, 0}, "saturnmap.png", 6);
-  makePlanet("uranus", root_node_pointer, 0.3f, 0.05f, 9.0f, glm::fvec3{65, 105, 225}, "uranusmap.png", 7);
-  makePlanet("neptune", root_node_pointer, 0.3f, 0.04f, 10.0f, glm::fvec3{0, 0, 139}, "neptunemap.png", 8);
-  makePlanet("pluto", root_node_pointer, 0.04f, 0.06f, 10.5f, glm::fvec3{255, 255, 255}, "plutomap1k.png", 9);
+  makePlanet("mercury", root_node_pointer, 0.09f, 0.5f, 1.0f, glm::fvec3{139, 69, 19}, "mercurymap.png", 2);
+  makePlanet("venus", root_node_pointer, 0.2f, 0.4f, 1.5f, glm::fvec3{245, 222, 179}, "venusmap.png", 3);
+  makePlanet("earth", root_node_pointer, 0.2f, 0.3f, 2.5f, glm::fvec3{34, 139, 34}, "earthmap1k.png", 4);
+  makePlanet("mars", root_node_pointer, 0.1f, 0.2f, 3.5f, glm::fvec3{255, 0, 0}, "mars_1k_color.png", 5);
+  makePlanet("jupiter", root_node_pointer, 0.4f, 0.09f, 5.0f, glm::fvec3{255, 140, 0}, "jupitermap.png", 6);
+  makePlanet("saturn", root_node_pointer, 0.4f, 0.10f, 7.0f, glm::fvec3{255, 165, 0}, "saturnmap.png", 7);
+  makePlanet("uranus", root_node_pointer, 0.3f, 0.05f, 9.0f, glm::fvec3{65, 105, 225}, "uranusmap.png", 8);
+  makePlanet("neptune", root_node_pointer, 0.3f, 0.04f, 10.0f, glm::fvec3{0, 0, 139}, "neptunemap.png", 9);
+  makePlanet("pluto", root_node_pointer, 0.04f, 0.06f, 10.5f, glm::fvec3{255, 255, 255}, "plutomap1k.png", 10);
   
   // moons
   std::shared_ptr<Node> earth_holder_pointer = root_node_pointer->getChild("earth holder");
-  makePlanet("moon", earth_holder_pointer, 1.0f, 1.3f, 0.6f, glm::fvec3{128, 128, 128}, "moonmap1k.png", 10);
+  makePlanet("moon", earth_holder_pointer, 1.0f, 1.3f, 0.6f, glm::fvec3{128, 128, 128}, "moonmap1k.png", 11);
 
   // camera
   CameraNode camera = CameraNode("camera", root_node_pointer, glm::fmat4(1));
