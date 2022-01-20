@@ -241,9 +241,9 @@ void ApplicationSolar::initializeFullScreenQuad(){
     // v2
     1.0, -1.0, 0.0, 1.0, 0.0,
     // v3
-    1.0, 1.0, 0.0, 1.0, 1.0,
+    -1.0, 1.0, 0.0, 0.0, 1.0,
     // v4
-    -1.0, 1.0, 0.0, 0.0, 1.0
+    1.0, 1.0, 0.0, 1.0, 1.0
   };
 
   // generate vertex array object
